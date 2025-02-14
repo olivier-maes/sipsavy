@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/oli4maes/sipsavy/internal/pages"
 	"github.com/oli4maes/sipsavy/ui"
 )
 
@@ -16,10 +17,15 @@ func NewServer(
 	idleTimeout time.Duration,
 	readTimeout time.Duration,
 	writeTimeout time.Duration,
-	tlsConfig *tls.Config) *http.Server {
+	tlsConfig *tls.Config,
+	templateRenderer pages.TemplateRenderer) *http.Server {
 	mux := http.NewServeMux()
 
+	// Static files
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
+
+	// Home
+	mux.HandleFunc("GET /{$}", templateRenderer.Home)
 
 	return &http.Server{
 		Addr:         address,

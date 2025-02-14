@@ -1,0 +1,21 @@
+{{define "base"}}
+    <!doctype html>
+    <html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
+        <title>{{template "title" .}} - sipsavy</title>
+        <link rel='stylesheet' href='/static/css/pico.min.css'>
+        <link rel='shortcut icon' href='/static/img/favicon.ico' type='image/x-icon'>
+    </head>
+    <body>
+    <header class="container">
+        {{template "nav" .}}
+    </header>
+    <main class="container">
+        {{template "main" .}}
+    </main>
+    </body>
+    </html>
+{{end}}

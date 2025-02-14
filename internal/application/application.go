@@ -5,24 +5,20 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	"github.com/alexedwards/scs/v2"
-	"github.com/go-playground/form/v4"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/oli4maes/sipsavy/internal/pages"
 )
 
 type application struct {
-	dbConn         *pgxpool.Pool
-	templateCache  map[string]*template.Template
-	formDecoder    *form.Decoder
-	sessionManager *scs.SessionManager
-	server         *http.Server
+	dbConn *pgxpool.Pool
+	server *http.Server
 }
 
 func (a *application) start(ctx context.Context) (func(ctx2 context.Context) error, error) {
@@ -32,7 +28,7 @@ func (a *application) start(ctx context.Context) (func(ctx2 context.Context) err
 	errChan := make(chan error, 1)
 	go func() {
 		slog.InfoContext(ctx, fmt.Sprintf("Server listening on %s", a.server.Addr))
-		if err := a.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := a.server.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem"); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			errChan <- fmt.Errorf("failed to start server: %w", err)
 		}
 	}()
@@ -56,7 +52,6 @@ func (a *application) start(ctx context.Context) (func(ctx2 context.Context) err
 }
 
 func newApplication(ctx context.Context, config Config) (*application, error) {
-	// Initialize a database connection
 	dbConn, err := initDatabaseConnection(ctx, config.databaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("could not establish a database connection: %w", err)
@@ -66,15 +61,16 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
-	// HTTP Server
-	server := NewServer(ctx, config.serverListenAddress, config.idleTimeout, config.readHeaderTimeout, config.writeTimeout, tlsConfig)
+	templateRenderer, err := pages.NewTemplateRenderer()
+	if err != nil {
+		return nil, fmt.Errorf("could not create a template renderer: %w", err)
+	}
+	
+	server := NewServer(ctx, config.serverListenAddress, config.idleTimeout, config.readHeaderTimeout, config.writeTimeout, tlsConfig, templateRenderer)
 
 	return &application{
-		dbConn:         dbConn,
-		templateCache:  nil,
-		formDecoder:    nil,
-		sessionManager: nil,
-		server:         server,
+		dbConn: dbConn,
+		server: server,
 	}, nil
 }
 
