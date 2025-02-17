@@ -9,7 +9,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/justinas/alice"
 
-	"github.com/oli4maes/sipsavy/internal/pages"
+	"github.com/oli4maes/sipsavy/internal/template"
 	"github.com/oli4maes/sipsavy/ui"
 )
 
@@ -17,7 +17,7 @@ func newServer(
 	parentCtx context.Context,
 	config Config,
 	tlsConfig *tls.Config,
-	templateRenderer pages.TemplateRenderer,
+	templateRenderer template.Renderer,
 	sessionManager scs.SessionManager) *http.Server {
 	mux := http.NewServeMux()
 
@@ -29,6 +29,14 @@ func newServer(
 
 	// Home
 	mux.Handle("GET /{$}", dynamic.ThenFunc(templateRenderer.Home))
+
+	// PROTECTED ROUTES
+	//protected := dynamic.Append(requireAuthentication)
+
+	// TODO: add protected middleware
+	// Cocktail
+	mux.Handle("GET /cocktail/create", dynamic.ThenFunc(templateRenderer.CreateCocktail))
+	mux.Handle("POST /cocktail", dynamic.ThenFunc(templateRenderer.CreateCocktailPost))
 
 	// Standard middleware
 	alice.New(logRequest, commonHeaders).Then(mux)
