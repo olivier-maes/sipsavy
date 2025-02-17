@@ -3,9 +3,11 @@ module github.com/oli4maes/sipsavy
 go 1.24
 
 require (
+	github.com/alexedwards/scs/pgxstore v0.0.0-20250212122300-421ef1d8611c
 	github.com/alexedwards/scs/v2 v2.8.0
 	github.com/go-playground/form/v4 v4.2.1
 	github.com/jackc/pgx/v5 v5.7.2
+	github.com/justinas/alice v1.2.0
 	github.com/justinas/nosurf v1.1.1
 )
 
