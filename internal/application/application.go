@@ -11,6 +11,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/alexedwards/scs/pgxstore"
+	"github.com/alexedwards/scs/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/oli4maes/sipsavy/internal/pages"
@@ -52,21 +54,30 @@ func (a *application) start(ctx context.Context) (func(ctx2 context.Context) err
 }
 
 func newApplication(ctx context.Context, config Config) (*application, error) {
+	// Database
 	dbConn, err := initDatabaseConnection(ctx, config.databaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("could not establish a database connection: %w", err)
 	}
 
+	// TLS
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
+	// Templates
 	templateRenderer, err := pages.NewTemplateRenderer()
 	if err != nil {
 		return nil, fmt.Errorf("could not create a template renderer: %w", err)
 	}
-	
-	server := NewServer(ctx, config.serverListenAddress, config.idleTimeout, config.readHeaderTimeout, config.writeTimeout, tlsConfig, templateRenderer)
+
+	// Session manager
+	sessionManager := scs.New()
+	sessionManager.Store = pgxstore.New(dbConn)
+	sessionManager.Lifetime = config.sessionManagerLifetime
+
+	// Server
+	server := newServer(ctx, config, tlsConfig, templateRenderer, *sessionManager)
 
 	return &application{
 		dbConn: dbConn,

@@ -29,17 +29,20 @@ func TestNewConfig(t *testing.T) {
 					return "10", true
 				case WriteTimeoutEnvVar:
 					return "20", true
+				case SessionManagerLifetimeEnvVar:
+					return "24", true
 				default:
 					return "", false
 				}
 			},
 			expectedConfig: Config{
-				logLevel:            slog.LevelDebug,
-				serverListenAddress: "localhost:8888",
-				databaseURL:         "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable",
-				idleTimeout:         50 * time.Second,
-				readHeaderTimeout:   10 * time.Second,
-				writeTimeout:        20 * time.Second,
+				logLevel:               slog.LevelDebug,
+				serverListenAddress:    "localhost:8888",
+				databaseURL:            "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable",
+				idleTimeout:            50 * time.Second,
+				readHeaderTimeout:      10 * time.Second,
+				writeTimeout:           20 * time.Second,
+				sessionManagerLifetime: 24 * time.Hour,
 			},
 		},
 		{
@@ -48,12 +51,13 @@ func TestNewConfig(t *testing.T) {
 				return "", false
 			},
 			expectedConfig: Config{
-				logLevel:            slog.LevelInfo,
-				serverListenAddress: "localhost:8080",
-				databaseURL:         "",
-				idleTimeout:         60 * time.Second,
-				readHeaderTimeout:   5 * time.Second,
-				writeTimeout:        10 * time.Second,
+				logLevel:               slog.LevelInfo,
+				serverListenAddress:    "localhost:8080",
+				databaseURL:            "",
+				idleTimeout:            60 * time.Second,
+				readHeaderTimeout:      5 * time.Second,
+				writeTimeout:           10 * time.Second,
+				sessionManagerLifetime: 12 * time.Hour,
 			},
 		},
 	}
