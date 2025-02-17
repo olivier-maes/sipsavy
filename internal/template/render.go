@@ -26,6 +26,7 @@ const isAuthenticatedContextKey = contextKey("isAuthenticated")
 
 type cocktailRepo interface {
 	AddCocktail(ctx context.Context, cocktail internal.Cocktail) (int, error)
+	GetById(ctx context.Context, id int) (internal.Cocktail, error)
 }
 
 type Renderer struct {
@@ -61,6 +62,7 @@ type data struct {
 	CSRFToken       string
 	Form            any
 	Flash           string
+	Cocktail        internal.Cocktail
 }
 
 func (tr Renderer) newData(r *http.Request) data {

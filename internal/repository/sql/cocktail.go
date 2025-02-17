@@ -42,3 +42,20 @@ func NewInsertCocktailQuery(row CocktailRow) QueryRow[int] {
 		return id, nil
 	}
 }
+
+const getCocktailRowById = `SELECT id, name, created FROM cocktails WHERE id = $1`
+
+func NewGetCocktailByIdQuery(id int) QueryRow[CocktailRow] {
+	return func(ctx context.Context, conn Connection) (CocktailRow, error) {
+		args := []any{
+			id,
+		}
+
+		var row CocktailRow
+		err := conn.QueryRow(ctx, getCocktailRowById, args...).Scan(&row.ID, &row.Name, &row.Created)
+		if err != nil {
+			return CocktailRow{}, err
+		}
+		return row, nil
+	}
+}

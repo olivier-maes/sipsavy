@@ -1,0 +1,11 @@
+{{define "title"}}{{.Snippet.Name}}{{end}}
+
+{{define "main"}}
+    {{with .Cocktail}}
+        <article>
+            <header>{{.Name}}</header>
+            Body
+            <footer>Footer</footer>
+        </article>
+    {{end}}
+{{end}}
