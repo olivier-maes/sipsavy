@@ -1,0 +1,16 @@
+{{define  "title"}}Add a new cocktail{{end}}
+
+{{define "main"}}
+    <form action="/cocktail" method="POST">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+        <fieldset>
+            <label>
+                Name
+                <input type="text" name="name" placeholder="Name"/>
+            </label>
+        </fieldset>
+
+        <input type="submit" value="Save cocktail"/>
+    </form>
+{{end}}

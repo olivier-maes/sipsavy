@@ -15,7 +15,8 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/oli4maes/sipsavy/internal/pages"
+	"github.com/oli4maes/sipsavy/internal/repository"
+	"github.com/oli4maes/sipsavy/internal/template"
 )
 
 type application struct {
@@ -54,11 +55,13 @@ func (a *application) start(ctx context.Context) (func(ctx2 context.Context) err
 }
 
 func newApplication(ctx context.Context, config Config) (*application, error) {
-	// Database
+	// Database and repositories
 	dbConn, err := initDatabaseConnection(ctx, config.databaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("could not establish a database connection: %w", err)
 	}
+
+	cocktailRepo := repository.NewCocktailRepository(dbConn)
 
 	// TLS
 	tlsConfig := &tls.Config{
@@ -66,7 +69,7 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 	}
 
 	// Templates
-	templateRenderer, err := pages.NewTemplateRenderer()
+	templateRenderer, err := template.NewRenderer(cocktailRepo)
 	if err != nil {
 		return nil, fmt.Errorf("could not create a template renderer: %w", err)
 	}

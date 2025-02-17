@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/justinas/nosurf"
+
+	"github.com/oli4maes/sipsavy/internal/template"
 )
 
 func commonHeaders(h http.Handler) http.Handler {
@@ -45,4 +47,16 @@ func noSurf(next http.Handler) http.Handler {
 	})
 
 	return csrfHandler
+}
+
+func requireAuthentication(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !template.IsAuthenticated(r) {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		w.Header().Add("Cache-Control", "no-store")
+		next.ServeHTTP(w, r)
+	})
 }
