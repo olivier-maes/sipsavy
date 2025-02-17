@@ -2,6 +2,12 @@
 
 sipsavy is a web app for storing cocktail recipes.
 
+## Development setup
+
+```bash
+docker compose up
+```
+
 ### Atlas
 
 [Altas](https://atlasgo.io/docs) is a tool for managing database migrations.
@@ -26,4 +32,12 @@ Finally, the migration can be applied to the database with the following command
 
 ```bash
 atlas migrate apply --url "postgres://postgres:postgres@localhost:5432/sipsavy?sslmode=disable"
+```
+
+### TLS
+
+To generate a self-signed TLS, locate the `generate_cert.go` file and run the following command:
+
+```bash
+go run /Users/<<username>>/go/go1.24.0/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
 ```
