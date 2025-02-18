@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"crypto/tls"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -62,11 +61,7 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 	}
 
 	cocktailRepo := repository.NewCocktailRepository(dbConn)
-
-	// TLS
-	tlsConfig := &tls.Config{
-		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
-	}
+	userRepo := repository.NewUserRepository(dbConn)
 
 	// Session manager
 	sessionManager := scs.New()
@@ -74,13 +69,13 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 	sessionManager.Lifetime = config.sessionManagerLifetime
 
 	// Templates
-	templateRenderer, err := template.NewRenderer(cocktailRepo, sessionManager)
+	templateRenderer, err := template.NewRenderer(cocktailRepo, userRepo, sessionManager)
 	if err != nil {
 		return nil, fmt.Errorf("could not create a template renderer: %w", err)
 	}
 
 	// Server
-	server := newServer(ctx, config, tlsConfig, templateRenderer, *sessionManager)
+	server := newServer(ctx, config, templateRenderer, *sessionManager)
 
 	return &application{
 		dbConn: dbConn,

@@ -2,11 +2,22 @@
     <nav>
         <ul>
             <li><strong><a href='/' class="contrast">sipsavy</a></strong></li>
+            {{if .IsAuthenticated}}
+                <li><a href="/cocktail/create">add cocktail</a></li>
+            {{end}}
         </ul>
         <ul>
-            <li><a href="#" class="contrast">register</a></li>
-            <li><a href="#" class="contrast">login</a></li>
-            <li><a href="#" class="contrast">logout</a></li>
+            {{if .IsAuthenticated}}
+                <li>
+                    <form action="/user/logout" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                        <button type="submit">logout</button>
+                    </form>
+                </li>
+            {{else}}
+                <li><a href="/user/signup" class="contrast">signup</a></li>
+                <li><a href="/user/login" class="contrast">login</a></li>
+            {{end}}
         </ul>
     </nav>
 {{end}}

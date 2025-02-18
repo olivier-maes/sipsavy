@@ -1,8 +1,11 @@
 package template
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
+
+	errors2 "github.com/oli4maes/sipsavy/internal/errors"
 )
 
 func (tr Renderer) ViewCocktail(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +17,11 @@ func (tr Renderer) ViewCocktail(w http.ResponseWriter, r *http.Request) {
 
 	cocktail, err := tr.cocktailRepo.GetById(r.Context(), id)
 	if err != nil {
-		tr.serverError(w, r, err)
+		if errors.Is(err, errors2.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			tr.serverError(w, r, err)
+		}
 		return
 	}
 

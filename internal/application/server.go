@@ -16,37 +16,49 @@ import (
 func newServer(
 	parentCtx context.Context,
 	config Config,
-	tlsConfig *tls.Config,
-	templateRenderer template.Renderer,
-	sessionManager scs.SessionManager) *http.Server {
+	tr template.Renderer,
+	sm scs.SessionManager) *http.Server {
 	mux := http.NewServeMux()
 
 	// Static files
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
 	// Dynamic middleware
-	dynamic := alice.New(sessionManager.LoadAndSave, noSurf)
+	dynamic := alice.New(sm.LoadAndSave, noSurf, tr.Authenticate)
 
 	// Home
-	mux.Handle("GET /{$}", dynamic.ThenFunc(templateRenderer.Home))
+	mux.Handle("GET /{$}", dynamic.ThenFunc(tr.Home))
+
+	// User
+	mux.Handle("GET /user/signup", dynamic.ThenFunc(tr.UserSignup))
+	mux.Handle("POST /user/signup", dynamic.ThenFunc(tr.UserSignupPost))
+	mux.Handle("GET /user/login", dynamic.ThenFunc(tr.UserLogin))
+	mux.Handle("POST /user/login", dynamic.ThenFunc(tr.UserLoginPost))
 
 	// Cocktail
-	mux.Handle("GET /cocktail/{id}", dynamic.ThenFunc(templateRenderer.ViewCocktail))
+	mux.Handle("GET /cocktail/{id}", dynamic.ThenFunc(tr.ViewCocktail))
 
 	// PROTECTED ROUTES
-	//protected := dynamic.Append(requireAuthentication)
+	protected := dynamic.Append(requireAuthentication)
 
-	// TODO: add protected middleware
 	// Cocktail
-	mux.Handle("GET /cocktail/create", dynamic.ThenFunc(templateRenderer.CreateCocktail))
-	mux.Handle("POST /cocktail", dynamic.ThenFunc(templateRenderer.CreateCocktailPost))
+	mux.Handle("GET /cocktail/create", protected.ThenFunc(tr.CreateCocktail))
+	mux.Handle("POST /cocktail", protected.ThenFunc(tr.CreateCocktailPost))
+
+	// User
+	mux.Handle("POST /user/logout", protected.ThenFunc(tr.UserLogoutPost))
 
 	// Standard middleware
-	alice.New(logRequest, commonHeaders).Then(mux)
+	standard := alice.New(tr.RecoverPanic, logRequest, commonHeaders)
+
+	// TLS
+	tlsConfig := &tls.Config{
+		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+	}
 
 	return &http.Server{
 		Addr:         config.serverListenAddress,
-		Handler:      mux,
+		Handler:      standard.Then(mux),
 		BaseContext:  func(net.Listener) context.Context { return context.WithoutCancel(parentCtx) },
 		TLSConfig:    tlsConfig,
 		IdleTimeout:  config.idleTimeout,

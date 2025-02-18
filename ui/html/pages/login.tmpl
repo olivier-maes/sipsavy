@@ -1,0 +1,23 @@
+{{define "title"}}login{{end}}
+
+{{define "main"}}
+    <form action="/user/login" method="POST" novalidate>
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+        <fieldset>
+            <label>
+                Email
+                <input type="email" name="email" value="{{.Form.Email}}"/>
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <label>
+                Password
+                <input type="password" name="password" value="{{.Form.Password}}"/>
+            </label>
+        </fieldset>
+
+        <input type="submit" value="Login"/>
+    </form>
+{{end}}

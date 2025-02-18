@@ -30,14 +30,21 @@ type cocktailRepo interface {
 	GetLatest(ctx context.Context) ([]internal.Cocktail, error)
 }
 
+type userRepo interface {
+	AddUser(ctx context.Context, name string, email string, password string) error
+	Authenticate(ctx context.Context, email string, password string) (int, error)
+	Exists(ctx context.Context, id int) (bool, error)
+}
+
 type Renderer struct {
 	templateCache  map[string]*template.Template
 	formDecoder    *f.Decoder
 	sessionManager *scs.SessionManager
 	cocktailRepo   cocktailRepo
+	userRepo       userRepo
 }
 
-func NewRenderer(cocktailRepo cocktailRepo, sessionManager *scs.SessionManager) (Renderer, error) {
+func NewRenderer(cocktailRepo cocktailRepo, userRepo userRepo, sessionManager *scs.SessionManager) (Renderer, error) {
 	templateCache, err := newCache()
 	if err != nil {
 		return Renderer{}, err
@@ -47,6 +54,7 @@ func NewRenderer(cocktailRepo cocktailRepo, sessionManager *scs.SessionManager) 
 		templateCache:  templateCache,
 		formDecoder:    f.NewDecoder(),
 		cocktailRepo:   cocktailRepo,
+		userRepo:       userRepo,
 		sessionManager: sessionManager,
 	}, nil
 }
@@ -57,6 +65,42 @@ func IsAuthenticated(r *http.Request) bool {
 		return false
 	}
 	return authenticated
+}
+
+func (tr Renderer) Authenticate(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		id := tr.sessionManager.GetInt(r.Context(), "authenticatedUserID")
+		if id == 0 {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		exists, err := tr.userRepo.Exists(r.Context(), id)
+		if err != nil {
+			tr.serverError(w, r, err)
+			return
+		}
+
+		if exists {
+			ctx := context.WithValue(r.Context(), isAuthenticatedContextKey, id)
+			r = r.WithContext(ctx)
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (tr Renderer) RecoverPanic(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if err := recover(); err != nil {
+				w.Header().Set("Connection", "close")
+				tr.serverError(w, r, fmt.Errorf("%s", err))
+			}
+		}()
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 type data struct {
