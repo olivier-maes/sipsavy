@@ -28,6 +28,16 @@ func (r CocktailRepository) AddCocktail(ctx context.Context, cocktail internal.C
 	return id, nil
 }
 
+func (r CocktailRepository) GetById(ctx context.Context, id int) (internal.Cocktail, error) {
+	getByIdQuery := sql.NewGetCocktailByIdQuery(id)
+	row, err := getByIdQuery(ctx, r.conn)
+	if err != nil {
+		return internal.Cocktail{}, err
+	}
+
+	return row.ToCocktail(), nil
+}
+
 func NewCocktailRepository(conn *pgxpool.Pool) CocktailRepository {
 	return CocktailRepository{conn: conn}
 }
