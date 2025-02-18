@@ -8,7 +8,6 @@ import (
 	"github.com/jackc/pgx/v5"
 
 	"github.com/oli4maes/sipsavy/internal"
-	errors2 "github.com/oli4maes/sipsavy/internal/errors"
 )
 
 type CocktailRow struct {
@@ -59,7 +58,7 @@ func NewGetCocktailByIdQuery(id int) QueryRow[CocktailRow] {
 		err := conn.QueryRow(ctx, getCocktailRowById, args...).Scan(&row.ID, &row.Name, &row.Created)
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return CocktailRow{}, errors2.ErrNoRecord
+				return CocktailRow{}, internal.ErrNoRecord
 			} else {
 				return CocktailRow{}, err
 			}

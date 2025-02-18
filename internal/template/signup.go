@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	errors2 "github.com/oli4maes/sipsavy/internal/errors"
+	errors2 "github.com/oli4maes/sipsavy/internal"
 )
 
 type userSignupForm struct {

@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	errors2 "github.com/oli4maes/sipsavy/internal/errors"
+	errors2 "github.com/oli4maes/sipsavy/internal"
 )
 
 type UserRow struct {

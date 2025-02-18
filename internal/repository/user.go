@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
 
-	errors2 "github.com/oli4maes/sipsavy/internal/errors"
+	errors2 "github.com/oli4maes/sipsavy/internal"
 	"github.com/oli4maes/sipsavy/internal/repository/sql"
 )
 
