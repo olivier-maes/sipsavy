@@ -30,6 +30,9 @@ func newServer(
 	// Home
 	mux.Handle("GET /{$}", dynamic.ThenFunc(templateRenderer.Home))
 
+	// Cocktail
+	mux.Handle("GET /cocktail/{id}", dynamic.ThenFunc(templateRenderer.ViewCocktail))
+
 	// PROTECTED ROUTES
 	//protected := dynamic.Append(requireAuthentication)
 

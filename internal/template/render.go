@@ -36,16 +36,17 @@ type Renderer struct {
 	cocktailRepo   cocktailRepo
 }
 
-func NewRenderer(cocktailRepo cocktailRepo) (Renderer, error) {
+func NewRenderer(cocktailRepo cocktailRepo, sessionManager *scs.SessionManager) (Renderer, error) {
 	templateCache, err := newCache()
 	if err != nil {
 		return Renderer{}, err
 	}
 
 	return Renderer{
-		templateCache: templateCache,
-		formDecoder:   f.NewDecoder(),
-		cocktailRepo:  cocktailRepo,
+		templateCache:  templateCache,
+		formDecoder:    f.NewDecoder(),
+		cocktailRepo:   cocktailRepo,
+		sessionManager: sessionManager,
 	}, nil
 }
 

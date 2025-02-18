@@ -68,16 +68,16 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
-	// Templates
-	templateRenderer, err := template.NewRenderer(cocktailRepo)
-	if err != nil {
-		return nil, fmt.Errorf("could not create a template renderer: %w", err)
-	}
-
 	// Session manager
 	sessionManager := scs.New()
 	sessionManager.Store = pgxstore.New(dbConn)
 	sessionManager.Lifetime = config.sessionManagerLifetime
+
+	// Templates
+	templateRenderer, err := template.NewRenderer(cocktailRepo, sessionManager)
+	if err != nil {
+		return nil, fmt.Errorf("could not create a template renderer: %w", err)
+	}
 
 	// Server
 	server := newServer(ctx, config, tlsConfig, templateRenderer, *sessionManager)

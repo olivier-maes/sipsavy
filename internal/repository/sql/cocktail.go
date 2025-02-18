@@ -14,9 +14,9 @@ type CocktailRow struct {
 }
 
 func (r *CocktailRow) FromCocktail(c internal.Cocktail) {
-	r.ID = c.ID()
-	r.Name = c.Name()
-	r.Created = c.Created()
+	r.ID = c.ID
+	r.Name = c.Name
+	r.Created = c.Created
 }
 
 func (r *CocktailRow) ToCocktail() internal.Cocktail {
