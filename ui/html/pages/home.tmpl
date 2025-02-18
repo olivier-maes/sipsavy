@@ -2,4 +2,25 @@
 
 {{define "main"}}
     <h2>Latest recipes</h2>
+
+    {{if .Cocktails}}
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Cocktail</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range .Cocktails}}
+                <tr>
+                    <td><a href="/cocktail/{{.ID}}">{{.Name}}</a></td>
+                    <td>{{humanDate .Created}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{else}}
+        <p>There's nothing to see here...</p>
+    {{end}}
 {{end}}

@@ -27,6 +27,7 @@ const isAuthenticatedContextKey = contextKey("isAuthenticated")
 type cocktailRepo interface {
 	AddCocktail(ctx context.Context, cocktail internal.Cocktail) (int, error)
 	GetById(ctx context.Context, id int) (internal.Cocktail, error)
+	GetLatest(ctx context.Context) ([]internal.Cocktail, error)
 }
 
 type Renderer struct {
@@ -64,6 +65,7 @@ type data struct {
 	Form            any
 	Flash           string
 	Cocktail        internal.Cocktail
+	Cocktails       []internal.Cocktail
 }
 
 func (tr Renderer) newData(r *http.Request) data {
@@ -78,7 +80,7 @@ func humanDate(t time.Time) string {
 		return ""
 	}
 
-	return t.UTC().Format("02 Jan 2006 at 15:04")
+	return t.UTC().Format("02 Jan 2006")
 }
 
 var functions = template.FuncMap{

@@ -38,6 +38,22 @@ func (r CocktailRepository) GetById(ctx context.Context, id int) (internal.Cockt
 	return row.ToCocktail(), nil
 }
 
+func (r CocktailRepository) GetLatest(ctx context.Context) ([]internal.Cocktail, error) {
+	getLatestQuery := sql.NewGetLatestCocktailsQuery()
+	rows, err := getLatestQuery(ctx, r.conn)
+	if err != nil {
+		return []internal.Cocktail{}, err
+	}
+
+	cocktails := make([]internal.Cocktail, len(rows))
+	for i, row := range rows {
+		c := row.ToCocktail()
+		cocktails[i] = c
+	}
+
+	return cocktails, nil
+}
+
 func NewCocktailRepository(conn *pgxpool.Pool) CocktailRepository {
 	return CocktailRepository{conn: conn}
 }

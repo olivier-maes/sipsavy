@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/jackc/pgx/v5"
+
 	"github.com/oli4maes/sipsavy/internal"
 )
 
@@ -57,5 +59,25 @@ func NewGetCocktailByIdQuery(id int) QueryRow[CocktailRow] {
 			return CocktailRow{}, err
 		}
 		return row, nil
+	}
+}
+
+const getLatestCocktailsRow = `SELECT id, name, created 
+								FROM cocktails 
+								ORDER BY created DESC limit 10`
+
+func NewGetLatestCocktailsQuery() Query[CocktailRow] {
+	return func(ctx context.Context, conn Connection) ([]CocktailRow, error) {
+		rows, err := conn.Query(ctx, getLatestCocktailsRow)
+		if err != nil {
+			return []CocktailRow{}, err
+		}
+
+		cocktailRows, err := pgx.CollectRows(rows, pgx.RowToStructByName[CocktailRow])
+		if err != nil {
+			return []CocktailRow{}, err
+		}
+
+		return cocktailRows, nil
 	}
 }
