@@ -36,7 +36,8 @@ atlas migrate apply --url "postgres://postgres:postgres@localhost:5432/sipsavy?s
 
 ### TLS
 
-To generate a self-signed TLS, locate the `generate_cert.go` file and run the following command:
+To generate a self-signed TLS, locate the `generate_cert.go` file and run the following command, you should then place
+the generated files in the `tls` directory under the root of the project.
 
 ```bash
 go run /Users/<<username>>/go/go1.24.0/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=localhost
