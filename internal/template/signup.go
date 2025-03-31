@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	errors2 "github.com/oli4maes/sipsavy/internal"
+	errors2 "github.com/olivier-maes/sipsavy/internal"
 )
 
 type userSignupForm struct {
@@ -40,7 +40,7 @@ func (tr Renderer) UserSignupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tr.sessionManager.Put(r.Context(), "flash", "You've successfully signed up, please log in.")
+	tr.SessionManager.Put(r.Context(), "flash", "You've successfully signed up, please log in.")
 
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }

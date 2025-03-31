@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/oli4maes/sipsavy/internal"
+	"github.com/olivier-maes/sipsavy/internal"
 )
 
 type CocktailRow struct {

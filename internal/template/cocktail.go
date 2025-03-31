@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	errors2 "github.com/oli4maes/sipsavy/internal"
+	errors2 "github.com/olivier-maes/sipsavy/internal"
 )
 
 func (tr Renderer) ViewCocktail(w http.ResponseWriter, r *http.Request) {

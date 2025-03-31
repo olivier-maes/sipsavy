@@ -6,25 +6,23 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/alexedwards/scs/v2"
 	"github.com/justinas/alice"
 
-	"github.com/oli4maes/sipsavy/internal/template"
-	"github.com/oli4maes/sipsavy/ui"
+	"github.com/olivier-maes/sipsavy/internal/template"
+	"github.com/olivier-maes/sipsavy/ui"
 )
 
 func newServer(
 	parentCtx context.Context,
 	config Config,
-	tr template.Renderer,
-	sm scs.SessionManager) *http.Server {
+	tr template.Renderer) *http.Server {
 	mux := http.NewServeMux()
 
 	// Static files
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
 	// Dynamic middleware
-	dynamic := alice.New(sm.LoadAndSave, noSurf, tr.Authenticate)
+	dynamic := alice.New(tr.SessionManager.LoadAndSave, noSurf, tr.Authenticate)
 
 	// Home
 	mux.Handle("GET /{$}", dynamic.ThenFunc(tr.Home))

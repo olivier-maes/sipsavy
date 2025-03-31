@@ -8,8 +8,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
 
-	errors2 "github.com/oli4maes/sipsavy/internal"
-	"github.com/oli4maes/sipsavy/internal/repository/sql"
+	errors2 "github.com/olivier-maes/sipsavy/internal"
+	"github.com/olivier-maes/sipsavy/internal/repository/sql"
 )
 
 type UserRepository struct {

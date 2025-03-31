@@ -6,8 +6,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/oli4maes/sipsavy/internal"
-	"github.com/oli4maes/sipsavy/internal/repository/sql"
+	"github.com/olivier-maes/sipsavy/internal"
+	"github.com/olivier-maes/sipsavy/internal/repository/sql"
 )
 
 type CocktailRepository struct {

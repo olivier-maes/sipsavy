@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/oli4maes/sipsavy/internal"
+	"github.com/olivier-maes/sipsavy/internal"
 )
 
 type form struct {
@@ -33,7 +33,7 @@ func (tr Renderer) CreateCocktailPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tr.sessionManager.Put(r.Context(), "flash", "Cocktail successfully created")
+	tr.SessionManager.Put(r.Context(), "flash", "Cocktail successfully created")
 
 	http.Redirect(w, r, fmt.Sprintf("/cocktail/%d", id), http.StatusSeeOther)
 }

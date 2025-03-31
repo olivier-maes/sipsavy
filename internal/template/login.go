@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	errors2 "github.com/oli4maes/sipsavy/internal"
+	errors2 "github.com/olivier-maes/sipsavy/internal"
 )
 
 type userLoginForm struct {
@@ -38,13 +38,13 @@ func (tr Renderer) UserLoginPost(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tr.sessionManager.RenewToken(r.Context())
+	err = tr.SessionManager.RenewToken(r.Context())
 	if err != nil {
 		tr.serverError(w, r, err)
 		return
 	}
 
-	tr.sessionManager.Put(r.Context(), "authenticatedUserID", id)
+	tr.SessionManager.Put(r.Context(), "authenticatedUserID", id)
 
 	http.Redirect(w, r, "/cocktail/create", http.StatusSeeOther)
 }

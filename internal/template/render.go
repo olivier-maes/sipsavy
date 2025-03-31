@@ -16,8 +16,8 @@ import (
 	f "github.com/go-playground/form/v4"
 	"github.com/justinas/nosurf"
 
-	"github.com/oli4maes/sipsavy/internal"
-	"github.com/oli4maes/sipsavy/ui"
+	"github.com/olivier-maes/sipsavy/internal"
+	"github.com/olivier-maes/sipsavy/ui"
 )
 
 type contextKey string
@@ -39,7 +39,7 @@ type userRepo interface {
 type Renderer struct {
 	templateCache  map[string]*template.Template
 	formDecoder    *f.Decoder
-	sessionManager *scs.SessionManager
+	SessionManager *scs.SessionManager
 	cocktailRepo   cocktailRepo
 	userRepo       userRepo
 }
@@ -55,7 +55,7 @@ func NewRenderer(cocktailRepo cocktailRepo, userRepo userRepo, sessionManager *s
 		formDecoder:    f.NewDecoder(),
 		cocktailRepo:   cocktailRepo,
 		userRepo:       userRepo,
-		sessionManager: sessionManager,
+		SessionManager: sessionManager,
 	}, nil
 }
 
@@ -69,7 +69,13 @@ func IsAuthenticated(r *http.Request) bool {
 
 func (tr Renderer) Authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id := tr.sessionManager.GetInt(r.Context(), "authenticatedUserID")
+		//exists := tr.sessionManager.Exists(r.Context(), "authenticatedUserID")
+		//if !exists {
+		//	next.ServeHTTP(w, r)
+		//	return
+		//}
+
+		id := tr.SessionManager.GetInt(r.Context(), "authenticatedUserID")
 		if id == 0 {
 			next.ServeHTTP(w, r)
 			return

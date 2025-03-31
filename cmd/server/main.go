@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/oli4maes/sipsavy/internal/application"
+	"github.com/olivier-maes/sipsavy/internal/application"
 )
 
 func main() {

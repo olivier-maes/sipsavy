@@ -14,8 +14,8 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/oli4maes/sipsavy/internal/repository"
-	"github.com/oli4maes/sipsavy/internal/template"
+	"github.com/olivier-maes/sipsavy/internal/repository"
+	"github.com/olivier-maes/sipsavy/internal/template"
 )
 
 type application struct {
@@ -75,7 +75,7 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 	}
 
 	// Server
-	server := newServer(ctx, config, templateRenderer, *sessionManager)
+	server := newServer(ctx, config, templateRenderer)
 
 	return &application{
 		dbConn: dbConn,

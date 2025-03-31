@@ -6,7 +6,7 @@ import (
 
 	"github.com/justinas/nosurf"
 
-	"github.com/oli4maes/sipsavy/internal/template"
+	"github.com/olivier-maes/sipsavy/internal/template"
 )
 
 func commonHeaders(h http.Handler) http.Handler {
