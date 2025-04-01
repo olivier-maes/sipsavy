@@ -1,0 +1,24 @@
+name: Checks
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Build
+        run: go build -v ./...
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: go test -v ./...
