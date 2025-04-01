@@ -1,7 +1,10 @@
 name: Checks
 
 on:
-  workflow_call:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -12,7 +15,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ inputs.go-version }}
+          go-version: '1.24'
 
       - name: Build
         run: go build -v ./...
