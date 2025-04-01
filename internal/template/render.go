@@ -69,12 +69,6 @@ func IsAuthenticated(r *http.Request) bool {
 
 func (tr Renderer) Authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//exists := tr.sessionManager.Exists(r.Context(), "authenticatedUserID")
-		//if !exists {
-		//	next.ServeHTTP(w, r)
-		//	return
-		//}
-
 		id := tr.SessionManager.GetInt(r.Context(), "authenticatedUserID")
 		if id == 0 {
 			next.ServeHTTP(w, r)
@@ -88,7 +82,7 @@ func (tr Renderer) Authenticate(next http.Handler) http.Handler {
 		}
 
 		if exists {
-			ctx := context.WithValue(r.Context(), isAuthenticatedContextKey, id)
+			ctx := context.WithValue(r.Context(), isAuthenticatedContextKey, true)
 			r = r.WithContext(ctx)
 		}
 
