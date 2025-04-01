@@ -51,6 +51,7 @@ func newServer(
 
 	// TLS
 	tlsConfig := &tls.Config{
+		MinVersion:       tls.VersionTLS12,
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 

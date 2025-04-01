@@ -47,9 +47,8 @@ func (r UserRepository) Authenticate(ctx context.Context, email string, password
 	if err != nil {
 		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 			return 0, errors2.ErrInvalidCredentials
-		} else {
-			return 0, err
 		}
+		return 0, err
 	}
 
 	return row.ID, nil

@@ -46,22 +46,21 @@ func NewInsertCocktailQuery(row CocktailRow) QueryRow[int] {
 	}
 }
 
-const getCocktailRowById = `SELECT id, name, created FROM cocktails WHERE id = $1`
+const getCocktailRowByID = `SELECT id, name, created FROM cocktails WHERE id = $1`
 
-func NewGetCocktailByIdQuery(id int) QueryRow[CocktailRow] {
+func NewGetCocktailByIDQuery(id int) QueryRow[CocktailRow] {
 	return func(ctx context.Context, conn Connection) (CocktailRow, error) {
 		args := []any{
 			id,
 		}
 
 		var row CocktailRow
-		err := conn.QueryRow(ctx, getCocktailRowById, args...).Scan(&row.ID, &row.Name, &row.Created)
+		err := conn.QueryRow(ctx, getCocktailRowByID, args...).Scan(&row.ID, &row.Name, &row.Created)
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
 				return CocktailRow{}, internal.ErrNoRecord
-			} else {
-				return CocktailRow{}, err
 			}
+			return CocktailRow{}, err
 		}
 		return row, nil
 	}

@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"testing"
 	"time"
 
@@ -10,7 +9,7 @@ import (
 )
 
 func TestCocktailRepository_AddCocktail(t *testing.T) {
-	ctx := context.Background()
+	ctx := t.Context()
 	container, err := repositorytest.CreatePostgresContainer(ctx)
 	if err != nil {
 		t.Fatal(err)
