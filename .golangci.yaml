@@ -121,7 +121,7 @@ linters:
     #- wrapcheck # checks that errors returned from external packages are wrapped
     #- zerologlint # detects the wrong usage of zerolog that a user forgets to dispatch zerolog.Event
 
-  disabled:
+  disable:
   #- containedctx # detects struct contained context.Context field
   #- contextcheck # [too many false positives] checks the function whether use a non-inherited context
   #- dogsled # checks assignments with too many blank identifiers (e.g. x, _, _, _, := f())
