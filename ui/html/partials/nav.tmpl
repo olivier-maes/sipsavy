@@ -3,7 +3,7 @@
         <ul>
             <li><strong><a href='/' class="contrast">sipsavy</a></strong></li>
             {{if .IsAuthenticated}}
-                <li><a href="/cocktail/create">add cocktail</a></li>
+                <li><a href="/cocktail/create" class="contrast">add cocktail</a></li>
             {{end}}
         </ul>
         <ul>
@@ -11,7 +11,7 @@
                 <li>
                     <form action="/user/logout" method="POST">
                         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-                        <button type="submit">logout</button>
+                        <button type="submit" class="secondary">logout</button>
                     </form>
                 </li>
             {{else}}
