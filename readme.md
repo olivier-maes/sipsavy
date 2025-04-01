@@ -34,6 +34,14 @@ Finally, the migration can be applied to the database with the following command
 atlas migrate apply --url "postgres://postgres:postgres@localhost:5432/sipsavy?sslmode=disable"
 ```
 
+### Golangci-lint
+
+Run the linters locally:
+
+```bash
+golangci-lint
+```
+
 ### TLS
 
 To generate a self-signed TLS, locate the `generate_cert.go` file and run the following command, you should then place

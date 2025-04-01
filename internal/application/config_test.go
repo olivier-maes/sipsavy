@@ -47,7 +47,7 @@ func TestNewConfig(t *testing.T) {
 		},
 		{
 			name: "Test config default values",
-			loadEnvFn: func(key string) (string, bool) {
+			loadEnvFn: func(_ string) (string, bool) {
 				return "", false
 			},
 			expectedConfig: Config{

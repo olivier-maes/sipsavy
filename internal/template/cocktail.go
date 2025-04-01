@@ -15,7 +15,7 @@ func (tr Renderer) ViewCocktail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cocktail, err := tr.cocktailRepo.GetById(r.Context(), id)
+	cocktail, err := tr.cocktailRepo.GetByID(r.Context(), id)
 	if err != nil {
 		if errors.Is(err, errors2.ErrNoRecord) {
 			http.NotFound(w, r)
