@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/oli4maes/sipsavy/internal"
-	"github.com/oli4maes/sipsavy/internal/repository/repositorytest"
+	"github.com/olivier-maes/sipsavy/internal"
+	"github.com/olivier-maes/sipsavy/internal/repository/repositorytest"
 )
 
 func TestCocktailRepository_AddCocktail(t *testing.T) {
