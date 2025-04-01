@@ -42,17 +42,17 @@ func StopPostgresContainer(container *postgres.PostgresContainer) error {
 func ConnectToDatabaseContainer(ctx context.Context, container *postgres.PostgresContainer) (*pgxpool.Pool, error) {
 	dsn, err := container.ConnectionString(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to determine connection string: %s", err)
+		return nil, fmt.Errorf("failed to determine connection string: %w", err)
 	}
 
 	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to database: %s", err)
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	err = pool.Ping(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("could not ping database: %v", err)
+		return nil, fmt.Errorf("could not ping database: %w", err)
 	}
 
 	return pool, nil

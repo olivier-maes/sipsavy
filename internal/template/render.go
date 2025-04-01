@@ -26,7 +26,7 @@ const isAuthenticatedContextKey = contextKey("isAuthenticated")
 
 type cocktailRepo interface {
 	AddCocktail(ctx context.Context, cocktail internal.Cocktail) (int, error)
-	GetById(ctx context.Context, id int) (internal.Cocktail, error)
+	GetByID(ctx context.Context, id int) (internal.Cocktail, error)
 	GetLatest(ctx context.Context) ([]internal.Cocktail, error)
 }
 
@@ -127,10 +127,6 @@ func humanDate(t time.Time) string {
 	return t.UTC().Format("02 Jan 2006")
 }
 
-var functions = template.FuncMap{
-	"humanDate": humanDate,
-}
-
 func (tr Renderer) render(w http.ResponseWriter, r *http.Request, status int, page string, data data) {
 	ts, ok := tr.templateCache[page]
 	if !ok {
@@ -187,9 +183,11 @@ func newCache() (map[string]*template.Template, error) {
 			page,
 		}
 
-		ts, err := template.New(name).Funcs(functions).ParseFS(ui.Files, patterns...)
-		if err != nil {
-			return nil, err
+		ts, templErr := template.New(name).Funcs(template.FuncMap{
+			"humanDate": humanDate,
+		}).ParseFS(ui.Files, patterns...)
+		if templErr != nil {
+			return nil, templErr
 		}
 
 		cache[name] = ts

@@ -9,10 +9,10 @@ type Cocktail struct {
 	Created time.Time
 }
 
-func NewCocktail(ID int, Name string, Created time.Time) Cocktail {
+func NewCocktail(id int, name string, created time.Time) Cocktail {
 	return Cocktail{
-		ID:      ID,
-		Name:    Name,
-		Created: Created,
+		ID:      id,
+		Name:    name,
+		Created: created,
 	}
 }

@@ -56,9 +56,8 @@ func NewAuthenticateUserQuery(email string) QueryRow[UserRow] {
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
 				return UserRow{}, errors2.ErrInvalidCredentials
-			} else {
-				return UserRow{}, err
 			}
+			return UserRow{}, err
 		}
 
 		return row, nil

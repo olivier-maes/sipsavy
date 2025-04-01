@@ -28,9 +28,9 @@ func (r CocktailRepository) AddCocktail(ctx context.Context, cocktail internal.C
 	return id, nil
 }
 
-func (r CocktailRepository) GetById(ctx context.Context, id int) (internal.Cocktail, error) {
-	getByIdQuery := sql.NewGetCocktailByIdQuery(id)
-	row, err := getByIdQuery(ctx, r.conn)
+func (r CocktailRepository) GetByID(ctx context.Context, id int) (internal.Cocktail, error) {
+	getByIDQuery := sql.NewGetCocktailByIDQuery(id)
+	row, err := getByIDQuery(ctx, r.conn)
 	if err != nil {
 		return internal.Cocktail{}, err
 	}
