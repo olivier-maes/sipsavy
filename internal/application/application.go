@@ -61,6 +61,7 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 	}
 
 	cocktailRepo := repository.NewCocktailRepository(dbConn)
+	ingredientRepo := repository.NewIngredientRepository(dbConn)
 	userRepo := repository.NewUserRepository(dbConn)
 
 	// Session manager
@@ -69,7 +70,7 @@ func newApplication(ctx context.Context, config Config) (*application, error) {
 	sessionManager.Lifetime = config.sessionManagerLifetime
 
 	// Templates
-	templateRenderer, err := template.NewRenderer(cocktailRepo, userRepo, sessionManager)
+	templateRenderer, err := template.NewRenderer(cocktailRepo, userRepo, ingredientRepo, sessionManager)
 	if err != nil {
 		return nil, fmt.Errorf("could not create a template renderer: %w", err)
 	}
