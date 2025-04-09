@@ -38,6 +38,7 @@ type userRepo interface {
 
 type ingredientRepo interface {
 	AddIngredient(ctx context.Context, ingredient internal.Ingredient) (int, error)
+	ListIngredients(ctx context.Context) ([]internal.Ingredient, error)
 }
 
 type Renderer struct {
@@ -116,6 +117,8 @@ type data struct {
 	Flash           string
 	Cocktail        internal.Cocktail
 	Cocktails       []internal.Cocktail
+	Ingredients     []internal.Ingredient
+	Units           []internal.Unit
 }
 
 func (tr Renderer) newData(r *http.Request) data {

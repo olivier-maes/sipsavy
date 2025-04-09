@@ -4,11 +4,27 @@
     <form action="/cocktail" method="POST">
         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
-        <fieldset>
-            <label>
-                Name
-                <input type="text" name="name" placeholder="Name"/>
-            </label>
+        <label>
+            Name
+            <input type="text" name="name" placeholder="Name"/>
+        </label>
+
+        <fieldset role="group">
+            <select name="ingredient">
+                {{ range .Ingredients }}
+                    <option value="{{.ID}}">{{.Name}}</option>
+                {{ end }}
+            </select>
+
+            <input type="number" placeholder="amount" name="amount" min="0" max="100" step="1"/>
+
+            <select name="unit">
+                {{ range .Units}}
+                    <option value="{{.}}">{{.}}</option>
+                {{ end }}
+            </select>
+
+            <button type="button">Add ingredient</button>
         </fieldset>
 
         <input type="submit" value="Save cocktail"/>
