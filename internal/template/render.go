@@ -50,7 +50,11 @@ type Renderer struct {
 	ingredientRepo ingredientRepo
 }
 
-func NewRenderer(cocktailRepo cocktailRepo, userRepo userRepo, ingredientRepo ingredientRepo, sessionManager *scs.SessionManager) (Renderer, error) {
+func NewRenderer(
+	cocktailRepo cocktailRepo,
+	userRepo userRepo,
+	ingredientRepo ingredientRepo,
+	sessionManager *scs.SessionManager) (Renderer, error) {
 	templateCache, err := newCache()
 	if err != nil {
 		return Renderer{}, err
