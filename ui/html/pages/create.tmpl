@@ -9,20 +9,29 @@
             <input type="text" name="name" placeholder="Name"/>
         </label>
 
-        <fieldset role="group">
-            <select name="ingredient">
-                {{ range .Ingredients }}
-                    <option value="{{.ID}}">{{.Name}}</option>
-                {{ end }}
-            </select>
+        <fieldset class="grid">
+            <label>
+                Ingredient
+                <select name="ingredient">
+                    {{ range .Ingredients }}
+                        <option value="{{.ID}}">{{.Name}}</option>
+                    {{ end }}
+                </select>
+            </label>
 
-            <input type="number" placeholder="amount" name="amount" min="0" max="100" step="1"/>
+            <label>
+                Amount
+                <input type="number" placeholder="amount" name="amount" min="0" max="100" step="1"/>
+            </label>
 
-            <select name="unit">
-                {{ range .Units}}
-                    <option value="{{.}}">{{.}}</option>
-                {{ end }}
-            </select>
+            <label>
+                Unit
+                <select name="unit">
+                    {{ range .Units}}
+                        <option value="{{.}}">{{.}}</option>
+                    {{ end }}
+                </select>
+            </label>
 
             <button type="button">Add ingredient</button>
         </fieldset>

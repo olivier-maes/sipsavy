@@ -21,7 +21,7 @@ func (tr Renderer) CreateCocktail(w http.ResponseWriter, r *http.Request) {
 
 	d := tr.newData(r)
 	d.Ingredients = ingredients
-	d.Units = []internal.Unit{internal.UnitBarspoon, internal.UnitMilliliter}
+	d.Units = []internal.Unit{internal.UnitMilliliter, internal.UnitBarspoon}
 
 	d.Form = form{}
 	tr.render(w, r, http.StatusOK, "create.tmpl", d)
