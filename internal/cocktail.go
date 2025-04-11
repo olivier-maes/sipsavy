@@ -7,6 +7,8 @@ type Cocktail struct {
 	Name string
 
 	Created time.Time
+
+	CocktailIngredients []CocktailIngredient
 }
 
 func NewCocktail(id int, name string, created time.Time) Cocktail {

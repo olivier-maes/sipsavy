@@ -13,7 +13,16 @@ type form struct {
 }
 
 func (tr Renderer) CreateCocktail(w http.ResponseWriter, r *http.Request) {
+	ingredients, err := tr.ingredientRepo.ListIngredients(r.Context())
+	if err != nil {
+		tr.serverError(w, r, err)
+		return
+	}
+
 	d := tr.newData(r)
+	d.Ingredients = ingredients
+	d.Units = []internal.Unit{internal.UnitMilliliter, internal.UnitBarspoon}
+
 	d.Form = form{}
 	tr.render(w, r, http.StatusOK, "create.tmpl", d)
 }

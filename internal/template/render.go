@@ -36,15 +36,25 @@ type userRepo interface {
 	Exists(ctx context.Context, id int) (bool, error)
 }
 
+type ingredientRepo interface {
+	AddIngredient(ctx context.Context, ingredient internal.Ingredient) (int, error)
+	ListIngredients(ctx context.Context) ([]internal.Ingredient, error)
+}
+
 type Renderer struct {
 	templateCache  map[string]*template.Template
 	formDecoder    *f.Decoder
 	SessionManager *scs.SessionManager
 	cocktailRepo   cocktailRepo
 	userRepo       userRepo
+	ingredientRepo ingredientRepo
 }
 
-func NewRenderer(cocktailRepo cocktailRepo, userRepo userRepo, sessionManager *scs.SessionManager) (Renderer, error) {
+func NewRenderer(
+	cocktailRepo cocktailRepo,
+	userRepo userRepo,
+	ingredientRepo ingredientRepo,
+	sessionManager *scs.SessionManager) (Renderer, error) {
 	templateCache, err := newCache()
 	if err != nil {
 		return Renderer{}, err
@@ -56,6 +66,7 @@ func NewRenderer(cocktailRepo cocktailRepo, userRepo userRepo, sessionManager *s
 		cocktailRepo:   cocktailRepo,
 		userRepo:       userRepo,
 		SessionManager: sessionManager,
+		ingredientRepo: ingredientRepo,
 	}, nil
 }
 
@@ -110,6 +121,8 @@ type data struct {
 	Flash           string
 	Cocktail        internal.Cocktail
 	Cocktails       []internal.Cocktail
+	Ingredients     []internal.Ingredient
+	Units           []internal.Unit
 }
 
 func (tr Renderer) newData(r *http.Request) data {

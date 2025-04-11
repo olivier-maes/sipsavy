@@ -76,6 +76,7 @@ func NewGetLatestCocktailsQuery() Query[CocktailRow] {
 		if err != nil {
 			return []CocktailRow{}, err
 		}
+		defer rows.Close()
 
 		cocktailRows, err := pgx.CollectRows(rows, pgx.RowToStructByName[CocktailRow])
 		if err != nil {
