@@ -1,7 +1,36 @@
 ﻿@page "/"
+@using SipSavy.Web.Features.Cocktail.GetCocktailsOverview
+@inject GetCocktailsOverviewHandler GetCocktailsOverviewHandler
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="p-8">
+    <h1 class="text-xl">Cocktails</h1>
 
-Welcome to your new app.
+    <ul class="list bg-base-100 rounded-box shadow-md mt-8">
+
+        @foreach (var cocktail in Cocktails)
+        {
+            <li class="list-row flex items-center">
+                <div>
+                    <i class="fa-solid fa-martini-glass fa-xl"></i>
+                </div>
+                <div>
+                    <div>@cocktail.Name</div>
+                    <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+@code
+{
+    private List<GetCocktailsOverviewResponse.CocktailDto> Cocktails { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await GetCocktailsOverviewHandler.Handle(new GetCocktailsOverviewRequest());
+        Cocktails = res.Cocktails;
+    }
+}

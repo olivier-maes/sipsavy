@@ -19,4 +19,10 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>SipSavy.Web.UnitTests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
 </Project>

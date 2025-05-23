@@ -5,16 +5,18 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <base href="/"/>
-    <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]"/>
-    <link rel="stylesheet" href="@Assets["app.css"]"/>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="@Assets["SipSavy.Web.styles.css"]"/>
+    <link rel="stylesheet" href="@Assets["tailwind.css"]"/>
     <ImportMap/>
     <link rel="icon" type="image/png" href="favicon.png"/>
     <HeadOutlet/>
+    <title>sipsavy</title>
 </head>
 
-<body>
+<body class="min-h-screen min-w-[860px] flex flex-col bg-page">
 <Routes/>
+<script src="https://kit.fontawesome.com/7c2f7d55ce.js" crossorigin="anonymous"></script>
 <script src="_framework/blazor.web.js"></script>
 </body>
 
