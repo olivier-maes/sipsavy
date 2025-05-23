@@ -1,6 +1,6 @@
+using SipSavy.Data;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
-using SipSavy.Web.Infrastructure.Relational;
 
 var builder = WebApplication.CreateBuilder(args);
 

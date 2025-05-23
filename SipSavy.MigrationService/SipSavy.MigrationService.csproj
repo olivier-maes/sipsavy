@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SipSavy.MigrationService-7d3ed26d-17c4-4d52-8cc5-6b4ad3b39df5</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SipSavy.Data\SipSavy.Data.csproj" />
+    <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>
