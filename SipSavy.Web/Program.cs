@@ -1,9 +1,16 @@
 using SipSavy.Web.Views;
+using SipSavy.ServiceDefaults;
+using SipSavy.Web.Infrastructure.Relational;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Blazor
 builder.Services.AddRazorComponents();
+
+// Aspire service defaults
+builder.AddServiceDefaults();
+
+builder.AddSqlServerDbContext<AppDbContext>("sipsavy");
 
 var app = builder.Build();
 
@@ -17,10 +24,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>();
+
+// Aspire default endpoints for health checks, etc. (only in development)
+app.MapDefaultEndpoints();
 
 app.Run();
