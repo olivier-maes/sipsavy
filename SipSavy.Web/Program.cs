@@ -1,6 +1,8 @@
 using SipSavy.Data;
+using SipSavy.Data.Migrations;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
+using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,13 @@ builder.Services.AddRazorComponents();
 // Aspire service defaults
 builder.AddServiceDefaults();
 
+// Data
 builder.AddSqlServerDbContext<AppDbContext>("sipsavy");
+
+builder.Services.AddScoped<IQueryFacade, QueryFacade>();
+
+// Handlers
+builder.Services.AddScoped<GetCocktailsOverviewHandler>();
 
 var app = builder.Build();
 

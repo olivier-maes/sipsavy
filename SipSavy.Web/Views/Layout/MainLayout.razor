@@ -1,17 +1,15 @@
-﻿@inherits LayoutComponentBase
+﻿@using SipSavy.Web.Views.Components
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<div class="flex-grow">
+    <div class="w-full min-w-0 flex flex-col h-screen">
+        <div class="w-full top-0">
+            <NavMenu/>
         </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <div class="grow min-h-0">
+            <div class="flex flex-col h-full w-full">
+                @Body
+            </div>
+        </div>
+    </div>
 </div>
