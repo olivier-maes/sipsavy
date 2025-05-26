@@ -18,14 +18,25 @@ public sealed class MsSqlFixture : IAsyncLifetime
         return MsSqlContainer.DisposeAsync().AsTask();
     }
 
-    public static AppDbContext GetDbContext()
+    public static async Task<AppDbContext> GetDbContext()
     {
         var dbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlServer(MsSqlContainer.GetConnectionString())
             .Options);
 
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
+        await SeedDatabase(dbContext);
 
         return dbContext;
+    }
+
+    private static async Task SeedDatabase(AppDbContext dbContext)
+    {
+        await dbContext.AddRangeAsync(new List<Cocktail>
+        {
+            TestCocktail.Cocktail1,
+            TestCocktail.Cocktail1
+        });
+        await dbContext.SaveChangesAsync();
     }
 }
