@@ -35,7 +35,7 @@ public sealed class MsSqlFixture : IAsyncLifetime
         await dbContext.AddRangeAsync(new List<Cocktail>
         {
             TestCocktail.Cocktail1,
-            TestCocktail.Cocktail1
+            TestCocktail.Cocktail2
         });
         await dbContext.SaveChangesAsync();
     }

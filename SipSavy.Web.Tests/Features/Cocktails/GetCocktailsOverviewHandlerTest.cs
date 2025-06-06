@@ -21,7 +21,7 @@ public class GetCocktailsOverviewHandlerTest : IClassFixture<MsSqlFixture>
         Assert.Equal(2, response.Cocktails.Count);
         var cocktail1 = response.Cocktails.FirstOrDefault(c => c.Name == TestCocktail.Cocktail1.Name);
         Assert.Equal(cocktail1?.Name, TestCocktail.Cocktail1.Name);
-        var cocktail2 = response.Cocktails.FirstOrDefault(c => c.Name == TestCocktail.Cocktail1.Name);
-        Assert.Equal(cocktail2?.Name, TestCocktail.Cocktail1.Name);
+        var cocktail2 = response.Cocktails.FirstOrDefault(c => c.Name == TestCocktail.Cocktail2.Name);
+        Assert.Equal(cocktail2?.Name, TestCocktail.Cocktail2.Name);
     }
 }
