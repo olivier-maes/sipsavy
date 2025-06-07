@@ -1,18 +1,18 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sqlServer = builder
-    .AddSqlServer("sql-server", port: 14329)
-    .WithEndpoint(name: "sqlEndpoint", targetPort: 14330)
-    .WithDataVolume("sql-server-data")
+var postgres = builder
+    .AddPostgres("postgres", port: 5432)
+    .WithEndpoint(targetPort: 5432, name: "postgres-endpoint")
+    .WithDataVolume("postgres-data")
     .WithLifetime(ContainerLifetime.Persistent)
     .AddDatabase("sipsavy");
 
 builder.AddProject<Projects.SipSavy_Web>("web")
-    .WithReference(sqlServer)
-    .WaitFor(sqlServer);
+    .WithReference(postgres)
+    .WaitFor(postgres);
 
-builder.AddProject<Projects.SipSavy_MigrationService>("migrations")
-    .WithReference(sqlServer)
-    .WaitFor(sqlServer);
+builder.AddProject<Projects.SipSavy_MigrationService>("migration-service")
+    .WithReference(postgres)
+    .WaitFor(postgres);
 
 builder.Build().Run();

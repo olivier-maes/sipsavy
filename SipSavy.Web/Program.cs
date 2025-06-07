@@ -1,5 +1,4 @@
 using SipSavy.Data;
-using SipSavy.Data.Migrations;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
 using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
@@ -13,7 +12,7 @@ builder.Services.AddRazorComponents();
 builder.AddServiceDefaults();
 
 // Data
-builder.AddSqlServerDbContext<AppDbContext>("sipsavy");
+builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
 
 builder.Services.AddScoped<IQueryFacade, QueryFacade>();
 

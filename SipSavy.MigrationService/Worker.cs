@@ -46,17 +46,14 @@ public class Worker(
 
     private static async Task SeedDataAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
-        var cocktail = new Cocktail
-        {
-            Name = "Mojito",
-        };
-
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
             // Seed the database
             await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-            await dbContext.Cocktails.AddAsync(cocktail, cancellationToken);
+            
+            // Add data to seed here
+            
             await dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         });

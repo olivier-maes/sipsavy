@@ -11,7 +11,7 @@ builder.Services.AddHostedService<Worker>();
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing.AddSource(Worker.ActivitySourceName));
 
-builder.AddSqlServerDbContext<AppDbContext>("sipsavy");
+builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
 
 var host = builder.Build();
 host.Run();

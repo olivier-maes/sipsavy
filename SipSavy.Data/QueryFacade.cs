@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.Data.Domain;
 
-namespace SipSavy.Data.Migrations;
+namespace SipSavy.Data;
 
 public sealed class QueryFacade(AppDbContext dbContext) : IQueryFacade
 {
