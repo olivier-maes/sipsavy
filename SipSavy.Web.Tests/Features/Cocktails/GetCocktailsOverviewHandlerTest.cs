@@ -3,13 +3,13 @@ using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
 
 namespace SipSavy.Web.Tests.Features.Cocktails;
 
-public class GetCocktailsOverviewHandlerTest : IClassFixture<MsSqlFixture>
+public class GetCocktailsOverviewHandlerTest : IClassFixture<PostgresFixture>
 {
     [Fact]
     public async Task Handle_ShouldReturnAllCocktails()
     {
         // Arrange
-        var dbContext = await MsSqlFixture.GetDbContext();
+        var dbContext = await PostgresFixture.GetDbContext();
         var queryFacade = new QueryFacade(dbContext);
 
         // Act
