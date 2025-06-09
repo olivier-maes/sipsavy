@@ -15,4 +15,8 @@ builder.AddProject<Projects.SipSavy_MigrationService>("migration-service")
     .WithReference(postgres)
     .WaitFor(postgres);
 
+builder.AddProject<Projects.SipSavy_Worker>("worker")
+    .WithReference(postgres)
+    .WaitFor(postgres);
+
 builder.Build().Run();
