@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SipSavy.Data\SipSavy.Data.csproj" />
+    <ProjectReference Include="..\SipSavy.Web.Data\SipSavy.Web.Data.csproj" />
     <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>

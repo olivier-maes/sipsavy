@@ -1,4 +1,4 @@
-﻿namespace SipSavy.Data.Domain;
+﻿namespace SipSavy.Web.Data.Domain;
 
 public sealed class Cocktail
 {

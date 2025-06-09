@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace SipSavy.Data.Domain;
+namespace SipSavy.Web.Data.Domain;
 
 public sealed class CocktailEntityTypeConfig : IEntityTypeConfiguration<Cocktail>
 {
     public void Configure(EntityTypeBuilder<Cocktail> builder)
     {
-        builder.ToTable("Cocktails");
+        builder.ToTable("cocktails");
 
         builder.HasKey(c => c.Id);
 

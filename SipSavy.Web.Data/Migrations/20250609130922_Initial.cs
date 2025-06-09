@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace SipSavy.Data.Migrations
+namespace SipSavy.Web.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -12,7 +12,7 @@ namespace SipSavy.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cocktails",
+                name: "cocktails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -21,7 +21,7 @@ namespace SipSavy.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cocktails", x => x.Id);
+                    table.PrimaryKey("PK_cocktails", x => x.Id);
                 });
         }
 
@@ -29,7 +29,7 @@ namespace SipSavy.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cocktails");
+                name: "cocktails");
         }
     }
 }

@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using SipSavy.Data;
+using SipSavy.Worker.Data;
 
 #nullable disable
 
-namespace SipSavy.Data.Migrations
+namespace SipSavy.Worker.Data.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20250607085623_Initial")]
+    [DbContext(typeof(WorkerDbContext))]
+    [Migration("20250609131240_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace SipSavy.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("SipSavy.Data.Domain.Cocktail", b =>
+            modelBuilder.Entity("SipSavy.Worker.Data.Domain.Video", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,14 +32,25 @@ namespace SipSavy.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("New");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("YoutubeId")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cocktails", (string)null);
+                    b.ToTable("videos", (string)null);
                 });
 #pragma warning restore 612, 618
         }

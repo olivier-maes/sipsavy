@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Data.Domain;
+using SipSavy.Web.Data.Domain;
 
-namespace SipSavy.Data;
+namespace SipSavy.Web.Data;
 
-public sealed class QueryFacade(AppDbContext dbContext) : IQueryFacade
+public sealed class QueryFacade(WebDbContext dbContext) : IQueryFacade
 {
     public IQueryable<Cocktail> Cocktails => dbContext.Cocktails.AsQueryable().AsNoTracking();
 }

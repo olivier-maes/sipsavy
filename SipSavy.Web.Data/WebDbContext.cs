@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Data.Domain;
+using SipSavy.Web.Data.Domain;
 
-namespace SipSavy.Data;
+namespace SipSavy.Web.Data;
 
-public sealed class AppDbContext : DbContext
+public sealed class WebDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public WebDbContext(DbContextOptions<WebDbContext> options) : base(options)
     {
         Debug.WriteLine($"{ContextId} context created.");
     }

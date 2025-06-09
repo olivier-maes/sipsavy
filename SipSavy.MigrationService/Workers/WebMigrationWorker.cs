@@ -1,11 +1,10 @@
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Data;
-using SipSavy.Data.Domain;
+using SipSavy.Web.Data;
 
-namespace SipSavy.MigrationService;
+namespace SipSavy.MigrationService.Workers;
 
-public class Worker(
+public class WebMigrationWorker(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime hostApplicationLifetime)
     : BackgroundService
@@ -20,7 +19,7 @@ public class Worker(
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<WebDbContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
             //await SeedDataAsync(dbContext, cancellationToken);
@@ -34,7 +33,7 @@ public class Worker(
         hostApplicationLifetime.StopApplication();
     }
 
-    private static async Task RunMigrationAsync(AppDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task RunMigrationAsync(WebDbContext dbContext, CancellationToken cancellationToken)
     {
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
@@ -44,7 +43,7 @@ public class Worker(
         });
     }
 
-    private static async Task SeedDataAsync(AppDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task SeedDataAsync(WebDbContext dbContext, CancellationToken cancellationToken)
     {
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>

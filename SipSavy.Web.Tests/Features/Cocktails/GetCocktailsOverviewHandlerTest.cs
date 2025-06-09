@@ -1,4 +1,3 @@
-using SipSavy.Data;
 using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
 
 namespace SipSavy.Web.Tests.Features.Cocktails;

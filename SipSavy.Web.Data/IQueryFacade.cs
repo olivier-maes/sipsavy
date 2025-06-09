@@ -1,6 +1,6 @@
-using SipSavy.Data.Domain;
+using SipSavy.Web.Data.Domain;
 
-namespace SipSavy.Data;
+namespace SipSavy.Web.Data;
 
 public interface IQueryFacade
 {
