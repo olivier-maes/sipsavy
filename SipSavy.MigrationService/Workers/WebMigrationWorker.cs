@@ -4,17 +4,17 @@ using SipSavy.Web.Data;
 
 namespace SipSavy.MigrationService.Workers;
 
-public class WebMigrationWorker(
+internal sealed class WebMigrationWorker(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime hostApplicationLifetime)
     : BackgroundService
 {
-    public const string ActivitySourceName = "Migrations";
+    public const string ActivitySourceName = "SipSavy Web Migrations";
     private static readonly ActivitySource SActivitySource = new(ActivitySourceName);
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        using var activity = SActivitySource.StartActivity("Migrating database", ActivityKind.Client);
+        using var activity = SActivitySource.StartActivity("Migrating sipsavy web database", ActivityKind.Client);
 
         try
         {
