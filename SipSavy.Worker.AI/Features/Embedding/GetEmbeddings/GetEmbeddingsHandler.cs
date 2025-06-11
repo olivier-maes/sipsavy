@@ -14,7 +14,7 @@ public sealed class GetEmbeddingsHandler : IHandler<GetEmbeddingsRequest, GetEmb
     {
         _httpClient = httpClient;
 
-        var apiKey = configuration["OpenAI:ApiKey"];
+        var apiKey = configuration["OpenAIApiKey"];
         if (!string.IsNullOrEmpty(apiKey))
         {
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -36,7 +36,10 @@ public sealed class GetEmbeddingsHandler : IHandler<GetEmbeddingsRequest, GetEmb
         var response = await _httpClient.PostAsync(
             "https://api.openai.com/v1/embeddings", content);
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            return new GetEmbeddingsResponse();
+        }
 
         var responseJson = await response.Content.ReadAsStringAsync();
         var result = JsonSerializer.Deserialize<OpenAiEmbeddingResponse>(responseJson);

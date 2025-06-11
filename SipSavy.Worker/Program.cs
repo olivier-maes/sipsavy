@@ -1,4 +1,5 @@
 using SipSavy.ServiceDefaults;
+using SipSavy.Worker.AI.Features.Chunk.ChunkTextByFixedSize;
 using SipSavy.Worker.AI.Features.Embedding.GetEmbeddings;
 using SipSavy.Worker.Data;
 using SipSavy.Worker.Features.Video.AddNewVideos;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<AddNewVideosHandler>();
 builder.Services.AddScoped<GetVideosByStatusHandler>();
 builder.Services.AddScoped<UpdateVideoHandler>();
 builder.Services.AddScoped<GetEmbeddingsHandler>();
+builder.Services.AddScoped<ChunkTextByFixedSizeHandler>();
 
 // Worker
 builder.Services.AddHostedService<TranscriptionWorker>();

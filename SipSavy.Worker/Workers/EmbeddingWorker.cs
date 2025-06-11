@@ -1,6 +1,9 @@
+using SipSavy.Worker.AI.Features.Chunk.ChunkTextByFixedSize;
 using SipSavy.Worker.AI.Features.Chunk.ChunkTextBySentence;
+using SipSavy.Worker.AI.Features.Embedding.GetEmbeddings;
 using SipSavy.Worker.Data.Domain;
 using SipSavy.Worker.Features.Video.GetVideosByStatus;
+using SipSavy.Worker.Features.Video.UpdateVideo;
 
 namespace SipSavy.Worker.Workers;
 
@@ -22,8 +25,10 @@ internal sealed class EmbeddingWorker(
     {
         using var scope = serviceScopeFactory.CreateScope();
         var getVideosByStatusHandler = scope.ServiceProvider.GetRequiredService<GetVideosByStatusHandler>();
-        var chunkTextBySentenceHandler =
-            scope.ServiceProvider.GetRequiredService<ChunkTextBySentenceHandler>();
+        var updateVideoHandler = scope.ServiceProvider.GetRequiredService<UpdateVideoHandler>();
+        var getEmbeddingsHandler = scope.ServiceProvider.GetRequiredService<GetEmbeddingsHandler>();
+        var chunkTextByFixedSizeHandler =
+            scope.ServiceProvider.GetRequiredService<ChunkTextByFixedSizeHandler>();
 
         // Get all videos that need embedding
         var getVideosByStatusResponse =
@@ -32,11 +37,17 @@ internal sealed class EmbeddingWorker(
         foreach (var v in getVideosByStatusResponse.Videos)
         {
             // Chunk the transcription
-            var chunkTextBySentenceResponse =
-                await chunkTextBySentenceHandler.Handle(new ChunkTextBySentenceRequest(v.Transcription));
-            
-            
+            var chunkTextByFixedSizeResponse =
+                await chunkTextByFixedSizeHandler.Handle(new ChunkTextByFixedSizeRequest(v.Transcription));
+
             // Embed the transcription chunks
+            var getEmbeddingsHandlerResponse = await getEmbeddingsHandler.Handle(
+                new GetEmbeddingsRequest(chunkTextByFixedSizeResponse.Chunks.Select(x => x.Content).ToList()));
+
+
+            // Update the video status to Embedded
+            var updateVideoResponse = await updateVideoHandler.Handle(
+                new UpdateVideoRequest(v.Id, v.Transcription, Status.Embedded));
         }
     }
 
