@@ -11,7 +11,7 @@ using SipSavy.Worker.Data;
 namespace SipSavy.Worker.Data.Migrations
 {
     [DbContext(typeof(WorkerDbContext))]
-    [Migration("20250609131240_Initial")]
+    [Migration("20250611083205_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -42,6 +42,10 @@ namespace SipSavy.Worker.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Transcription")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("YoutubeId")
                         .IsRequired()

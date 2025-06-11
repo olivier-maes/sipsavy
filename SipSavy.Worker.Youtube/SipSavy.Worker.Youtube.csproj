@@ -4,11 +4,12 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>9b8ae09d-2759-4601-8ff6-5eeaddd5856c</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Google.Apis.YouTube.v3" Version="1.69.0.3764" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" />
+      <PackageReference Include="YoutubeExplode" Version="6.5.4" />
     </ItemGroup>
 
     <ItemGroup>

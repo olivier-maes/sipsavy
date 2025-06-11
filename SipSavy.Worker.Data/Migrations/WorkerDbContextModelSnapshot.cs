@@ -40,6 +40,10 @@ namespace SipSavy.Worker.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Transcription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("YoutubeId")
                         .IsRequired()
                         .HasMaxLength(250)
