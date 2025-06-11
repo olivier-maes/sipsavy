@@ -1,6 +1,6 @@
 namespace SipSavy.Web.Tests.TestData;
 
-public static class TestCocktail
+internal static class TestCocktail
 {
     public static readonly Cocktail Cocktail1 = new Cocktail
     {

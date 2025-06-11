@@ -1,18 +1,31 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sqlServer = builder
-    .AddSqlServer("sql-server", port: 14329)
-    .WithEndpoint(name: "sqlEndpoint", targetPort: 14330)
-    .WithDataVolume("sql-server-data")
-    .WithLifetime(ContainerLifetime.Persistent)
-    .AddDatabase("sipsavy");
+// PostgreSQL
+var postgres = builder
+    .AddPostgres("postgres", port: 5432)
+    .WithEndpoint(targetPort: 5432, name: "postgres-endpoint")
+    .WithDataVolume("postgres-data")
+    .WithLifetime(ContainerLifetime.Persistent);
 
-builder.AddProject<Projects.SipSavy_Web>("web")
-    .WithReference(sqlServer)
-    .WaitFor(sqlServer);
+var webDb = postgres.AddDatabase("sipsavy-web-db");
+var workerDb = postgres.AddDatabase("sipsavy-worker-db");
 
-builder.AddProject<Projects.SipSavy_MigrationService>("migrations")
-    .WithReference(sqlServer)
-    .WaitFor(sqlServer);
+// Migration Service
+var migrationService = builder.AddProject<Projects.SipSavy_MigrationService>("migration-service")
+    .WithReference(webDb)
+    .WithReference(workerDb)
+    .WaitFor(postgres);
+
+// SipSavy Web application
+builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
+    .WithReference(webDb)
+    .WaitFor(postgres)
+    .WaitForCompletion(migrationService);
+
+// SipSavy Worker application
+builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
+    .WithReference(workerDb)
+    .WaitFor(postgres)
+    .WaitForCompletion(migrationService);
 
 builder.Build().Run();

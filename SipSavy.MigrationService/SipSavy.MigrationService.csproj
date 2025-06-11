@@ -8,12 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SipSavy.Data\SipSavy.Data.csproj" />
+    <ProjectReference Include="..\SipSavy.Web.Data\SipSavy.Web.Data.csproj" />
     <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\SipSavy.Worker.Data\SipSavy.Worker.Data.csproj" />
   </ItemGroup>
 </Project>

@@ -7,12 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SipSavy.Data\SipSavy.Data.csproj"/>
+        <ProjectReference Include="..\SipSavy.Core\SipSavy.Core.csproj" />
+        <ProjectReference Include="..\SipSavy.Web.Data\SipSavy.Web.Data.csproj" />
         <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.2.1"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.3.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
