@@ -14,12 +14,18 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="YoutubeExplode" Version="6.5.4" />
+        <PackageReference Include="YoutubeExplode" Version="6.5.4"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj"/>
         <ProjectReference Include="..\SipSavy.Worker.Data\SipSavy.Worker.Data.csproj"/>
         <ProjectReference Include="..\SipSavy.Worker.Youtube\SipSavy.Worker.Youtube.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>SipSavy.Worker.Tests</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
 </Project>
