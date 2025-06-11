@@ -19,6 +19,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\SipSavy.Worker.AI\SipSavy.Worker.AI.csproj" />
         <ProjectReference Include="..\SipSavy.Worker.Data\SipSavy.Worker.Data.csproj"/>
         <ProjectReference Include="..\SipSavy.Worker.Youtube\SipSavy.Worker.Youtube.csproj"/>
     </ItemGroup>

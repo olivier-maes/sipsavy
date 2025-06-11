@@ -5,7 +5,7 @@ using SipSavy.Worker.Features.Video.UpdateVideo;
 using SipSavy.Worker.Youtube.Features.ExtractTranscription;
 using SipSavy.Worker.Youtube.Features.GetVideosByChannelId;
 
-namespace SipSavy.Worker;
+namespace SipSavy.Worker.Workers;
 
 internal sealed class TranscriptionWorker(
     ILogger<TranscriptionWorker> logger,
@@ -16,7 +16,7 @@ internal sealed class TranscriptionWorker(
 
     public Task StartAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Worker running at: {Time}", DateTimeOffset.Now);
+        logger.LogInformation("Transcription worker running at: {Time}", DateTimeOffset.Now);
         _timer = new Timer(async void (_) => await DoWork(), null, TimeSpan.Zero, TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
@@ -29,7 +29,7 @@ internal sealed class TranscriptionWorker(
         var addNewVideosHandler = scope.ServiceProvider.GetRequiredService<AddNewVideosHandler>();
         var getVideosByStatusHandler = scope.ServiceProvider.GetRequiredService<GetVideosByStatusHandler>();
         var updateVideoHandler = scope.ServiceProvider.GetRequiredService<UpdateVideoHandler>();
-        
+
         // Get all videos from a specific YouTube channel
         var videosByChannelIdResponse = await getVideosByChannelIdHandler
             .Handle(new GetVideosByChannelIdRequest("UCioZY1p0bZ4Xt-yodw8_cBQ"));
@@ -60,7 +60,7 @@ internal sealed class TranscriptionWorker(
 
     public Task StopAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Worker stopping");
+        logger.LogInformation("Transcription worker stopping");
         _timer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
     }

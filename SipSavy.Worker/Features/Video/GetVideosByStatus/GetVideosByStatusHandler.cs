@@ -18,6 +18,7 @@ internal sealed class GetVideosByStatusHandler(IQueryFacade queryFacade)
                 Id = x.Id,
                 YoutubeId = x.YoutubeId,
                 Title = x.Title,
+                Transcription = x.Transcription,
                 Status = x.Status
             }).ToListAsync()
         };

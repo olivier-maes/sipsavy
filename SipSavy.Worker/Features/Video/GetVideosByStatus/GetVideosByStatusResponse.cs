@@ -11,6 +11,7 @@ internal sealed record GetVideosByStatusResponse
         public int Id { get; init; }
         public string YoutubeId { get; init; } = string.Empty;
         public string Title { get; init; } = string.Empty;
+        public string Transcription { get; set; } = string.Empty;
         public Status Status { get; init; }
     }
 };

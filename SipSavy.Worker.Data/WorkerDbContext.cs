@@ -11,12 +11,13 @@ public sealed class WorkerDbContext : DbContext
     {
         Debug.WriteLine($"{ContextId} context created.");
     }
-    
+
     public DbSet<Video> Videos { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        //modelBuilder.HasPostgresExtension("vector");
         modelBuilder.ApplyConfiguration(new VideoEntityTypeConfig());
     }
 }
