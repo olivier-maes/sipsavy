@@ -7,16 +7,13 @@ using SipSavy.Worker.Features.Video.UpdateVideo;
 
 namespace SipSavy.Worker.Workers;
 
-internal sealed class EmbeddingWorker(
-    ILogger<EmbeddingWorker> logger,
-    IServiceScopeFactory serviceScopeFactory)
-    : IHostedService, IDisposable
+internal sealed class EmbeddingWorker(IServiceScopeFactory serviceScopeFactory) : IHostedService, IDisposable
 {
     private Timer? _timer;
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Embedding worker running at: {Time}", DateTimeOffset.Now);
+       Console.WriteLine($"Embedding worker running at: {DateTimeOffset.Now}");
         _timer = new Timer(async void (_) => await DoWork(), null, TimeSpan.Zero, TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
@@ -41,9 +38,11 @@ internal sealed class EmbeddingWorker(
                 await chunkTextByFixedSizeHandler.Handle(new ChunkTextByFixedSizeRequest(v.Transcription));
 
             // Embed the transcription chunks
-            var getEmbeddingsHandlerResponse = await getEmbeddingsHandler.Handle(
-                new GetEmbeddingsRequest(chunkTextByFixedSizeResponse.Chunks.Select(x => x.Content).ToList()));
-
+            foreach (var chunk in chunkTextByFixedSizeResponse.Chunks)
+            {
+                var getEmbeddingsHandlerResponse = await getEmbeddingsHandler.Handle(
+                    new GetEmbeddingsRequest(chunk.Content));
+            }
 
             // Update the video status to Embedded
             var updateVideoResponse = await updateVideoHandler.Handle(
@@ -53,7 +52,7 @@ internal sealed class EmbeddingWorker(
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Embedding worker stopping");
+        Console.WriteLine("Embedding worker stopping");
         _timer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
     }

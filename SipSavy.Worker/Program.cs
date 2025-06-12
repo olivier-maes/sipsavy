@@ -15,6 +15,9 @@ var builder = Host.CreateApplicationBuilder(args);
 // Aspire service defaults
 builder.AddServiceDefaults();
 
+// Ollama
+builder.AddOllamaApiClient("ollama-nomic-embed-text");
+
 // Data
 builder.AddNpgsqlDbContext<WorkerDbContext>("sipsavy-worker-db");
 builder.Services.AddScoped<IQueryFacade, QueryFacade>();
@@ -37,4 +40,3 @@ builder.Services.AddHostedService<TranscriptionWorker>();
 builder.Services.AddHostedService<EmbeddingWorker>();
 
 var host = builder.Build();
-host.Run();

@@ -7,16 +7,13 @@ using SipSavy.Worker.Youtube.Features.GetVideosByChannelId;
 
 namespace SipSavy.Worker.Workers;
 
-internal sealed class TranscriptionWorker(
-    ILogger<TranscriptionWorker> logger,
-    IServiceScopeFactory serviceScopeFactory)
-    : IHostedService, IDisposable
+internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFactory) : IHostedService, IDisposable
 {
     private Timer? _timer;
 
     public Task StartAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Transcription worker running at: {Time}", DateTimeOffset.Now);
+        Console.WriteLine($"Transcription worker running at: {DateTimeOffset.Now}");
         _timer = new Timer(async void (_) => await DoWork(), null, TimeSpan.Zero, TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
@@ -60,7 +57,7 @@ internal sealed class TranscriptionWorker(
 
     public Task StopAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("Transcription worker stopping");
+        Console.WriteLine("Transcription worker stopping");
         _timer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
     }
