@@ -50,7 +50,6 @@ internal sealed class WorkerMigrationWorker(IServiceProvider serviceProvider,
                await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
             
                // Add data to seed here
-            
                await dbContext.SaveChangesAsync(cancellationToken);
                await transaction.CommitAsync(cancellationToken);
           });

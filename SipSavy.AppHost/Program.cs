@@ -2,8 +2,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // PostgreSQL
 var postgres = builder
-    .AddPostgres("postgres", port: 5432)
-    .WithEndpoint(targetPort: 5432, name: "postgres-endpoint")
+    .AddPostgres("postgres")
+    .WithImage("ankane/pgvector")
+    .WithImageTag("latest")
     .WithDataVolume("postgres-data")
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -14,8 +15,11 @@ var workerDb = postgres.AddDatabase("sipsavy-worker-db");
 var ollama = builder.AddOllama("ollama")
     .WithDataVolume("ollama-data")
     .WithLifetime(ContainerLifetime.Persistent)
-    .PublishAsContainer()
-    .AddModel("nomic-embed-text");
+    .WithGPUSupport()
+    .WithOpenWebUI();
+
+var embeddings = ollama.AddModel("embedding", "all-minilm");
+var chat = ollama.AddModel("chat", "llama3.1");
 
 // Migration Service
 var migrationService = builder.AddProject<Projects.SipSavy_MigrationService>("migration-service")
@@ -32,7 +36,7 @@ builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
 // SipSavy Worker application
 builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
     .WithReference(workerDb)
-    .WithReference(ollama)
+    .WithReference(embeddings)
     .WaitFor(postgres)
     .WaitFor(ollama)
     .WaitForCompletion(migrationService);

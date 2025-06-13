@@ -19,7 +19,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 // Ollama
-builder.AddOllamaApiClient("ollama-nomic-embed-text");
+builder.AddOllamaApiClient("embeddings").AddEmbeddingGenerator();
 
 // Data
 builder.AddNpgsqlDbContext<WorkerDbContext>("sipsavy-worker-db",

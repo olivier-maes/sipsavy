@@ -44,7 +44,8 @@ namespace SipSavy.Worker.Data.Migrations
 
                     b.Property<string>("Transcription")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
 
                     b.Property<string>("YoutubeId")
                         .IsRequired()
@@ -66,26 +67,21 @@ namespace SipSavy.Worker.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(2056)
-                        .HasColumnType("character varying(2056)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
 
                     b.Property<Vector>("Embedding")
                         .IsRequired()
-                        .HasColumnType("vector(768)");
+                        .HasColumnType("vector(384)");
 
                     b.Property<int>("VideoId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Embedding");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "ivfflat");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
-
                     b.HasIndex("VideoId");
 
-                    b.ToTable("document_chunks", (string)null);
+                    b.ToTable("video_chunks", (string)null);
                 });
 
             modelBuilder.Entity("SipSavy.Worker.Data.Domain.VideoChunk", b =>
