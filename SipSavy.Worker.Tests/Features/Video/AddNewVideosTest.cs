@@ -1,4 +1,5 @@
 using SipSavy.Worker.Data;
+using SipSavy.Worker.Data.Repository;
 using SipSavy.Worker.Features.Video.AddNewVideos;
 using SipSavy.Worker.Tests.Fixtures;
 using SipSavy.Worker.Tests.TestData;

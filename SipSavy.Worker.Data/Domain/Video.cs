@@ -8,4 +8,6 @@ public sealed class Video
     public string Transcription { get; set; } = string.Empty;
 
     public Status Status { get; set; } = Status.New;
+
+    public List<VideoChunk> Chunks { get; set; } = [];
 }

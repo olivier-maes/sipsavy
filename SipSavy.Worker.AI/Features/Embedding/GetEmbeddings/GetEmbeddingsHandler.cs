@@ -12,7 +12,7 @@ public sealed class GetEmbeddingsHandler(IOllamaApiClient ollamaApiClient)
 
         return new GetEmbeddingsResponse
         {
-            Embeddings = embeddings.Embeddings
+            Embedding = embeddings.Embeddings.First()
         };
     }
 }
