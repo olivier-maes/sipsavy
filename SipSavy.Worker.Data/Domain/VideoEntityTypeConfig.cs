@@ -29,7 +29,6 @@ public sealed class VideoEntityTypeConfig : IEntityTypeConfiguration<Video>
             .HasForeignKey(x => x.VideoId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.Transcription)
-            .HasMaxLength(5000);
+        builder.Property(x => x.Transcription);
     }
 }

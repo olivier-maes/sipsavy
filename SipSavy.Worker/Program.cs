@@ -19,7 +19,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 // Ollama
-builder.AddOllamaApiClient("embeddings").AddEmbeddingGenerator();
+builder.AddOllamaApiClient("embedding").AddEmbeddingGenerator();
 
 // Data
 builder.AddNpgsqlDbContext<WorkerDbContext>("sipsavy-worker-db",
@@ -48,6 +48,21 @@ builder.Services.AddScoped<AddVideoChunksHandler>();
 // Worker
 builder.Services.AddHostedService<TranscriptionWorker>();
 builder.Services.AddHostedService<EmbeddingWorker>();
+
+// Ensure database is created and pgvector extension is installed
+using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<WorkerDbContext>();
+
+    if (dbContext.Database.GetPendingMigrations().Any())
+    {
+        await dbContext.Database.MigrateAsync();
+        
+        await dbContext.Database.OpenConnectionAsync();
+        await ((Npgsql.NpgsqlConnection)dbContext.Database.GetDbConnection()).ReloadTypesAsync();
+        await dbContext.Database.CloseConnectionAsync();
+    }
+}
 
 var host = builder.Build();
 host.Run();

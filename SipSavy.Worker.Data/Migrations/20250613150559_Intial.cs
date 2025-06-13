@@ -23,7 +23,7 @@ namespace SipSavy.Worker.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     YoutubeId = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Transcription = table.Column<string>(type: "character varying(5000)", maxLength: 5000, nullable: false),
+                    Transcription = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false, defaultValue: "New")
                 },
                 constraints: table =>
@@ -37,7 +37,7 @@ namespace SipSavy.Worker.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Content = table.Column<string>(type: "character varying(5000)", maxLength: 5000, nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
                     Embedding = table.Column<Vector>(type: "vector(384)", nullable: false),
                     VideoId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -51,6 +51,13 @@ namespace SipSavy.Worker.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_video_chunks_Embedding",
+                table: "video_chunks",
+                column: "Embedding")
+                .Annotation("Npgsql:IndexMethod", "ivfflat")
+                .Annotation("Npgsql:IndexOperators", new[] { "vector_cosine_ops" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_video_chunks_VideoId",

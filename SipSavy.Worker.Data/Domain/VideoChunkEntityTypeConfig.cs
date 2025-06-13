@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Pgvector;
 
 namespace SipSavy.Worker.Data.Domain;
 
@@ -24,7 +22,10 @@ public sealed class VideoChunkEntityTypeConfig : IEntityTypeConfiguration<VideoC
             .HasColumnType("vector(384)");
 
         builder.Property(x => x.Content)
-            .HasMaxLength(5000)
             .IsRequired();
+        
+        builder.HasIndex(e => e.Embedding)
+            .HasMethod("ivfflat")
+            .HasOperators("vector_cosine_ops");
     }
 }

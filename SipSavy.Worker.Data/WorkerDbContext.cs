@@ -4,8 +4,12 @@ namespace SipSavy.Worker.Data;
 
 using Microsoft.EntityFrameworkCore;
 
-public sealed class WorkerDbContext(DbContextOptions<WorkerDbContext> options) : DbContext(options)
+public sealed class WorkerDbContext : DbContext
 {
+    public WorkerDbContext(DbContextOptions<WorkerDbContext> options) : base(options)
+    {
+    }
+
     public DbSet<Video> Videos { get; set; }
     public DbSet<VideoChunk> VideoChunks { get; set; }
 

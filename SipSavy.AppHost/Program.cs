@@ -15,8 +15,7 @@ var workerDb = postgres.AddDatabase("sipsavy-worker-db");
 var ollama = builder.AddOllama("ollama")
     .WithDataVolume("ollama-data")
     .WithLifetime(ContainerLifetime.Persistent)
-    .WithGPUSupport()
-    .WithOpenWebUI();
+    .WithGPUSupport();
 
 var embeddings = ollama.AddModel("embedding", "all-minilm");
 var chat = ollama.AddModel("chat", "llama3.1");

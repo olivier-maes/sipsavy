@@ -9,7 +9,7 @@ builder.AddServiceDefaults();
 
 // Workers
 builder.Services.AddHostedService<WebMigrationWorker>();
-builder.Services.AddHostedService<WorkerMigrationWorker>();
+//builder.Services.AddHostedService<WorkerMigrationWorker>();
 
 // OpenTelemetry
 builder.Services.AddOpenTelemetry()

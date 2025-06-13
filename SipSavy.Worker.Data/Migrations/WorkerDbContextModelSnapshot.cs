@@ -44,8 +44,7 @@ namespace SipSavy.Worker.Data.Migrations
 
                     b.Property<string>("Transcription")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("character varying(5000)");
+                        .HasColumnType("text");
 
                     b.Property<string>("YoutubeId")
                         .IsRequired()
@@ -67,8 +66,7 @@ namespace SipSavy.Worker.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("character varying(5000)");
+                        .HasColumnType("text");
 
                     b.Property<Vector>("Embedding")
                         .IsRequired()
@@ -78,6 +76,11 @@ namespace SipSavy.Worker.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Embedding");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "ivfflat");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
 
                     b.HasIndex("VideoId");
 
