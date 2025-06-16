@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SipSavy.Core\SipSavy.Core.csproj" />
+      <ProjectReference Include="..\SipSavy.Worker.Data\SipSavy.Worker.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
