@@ -2,7 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // PostgreSQL
 var postgres = builder
-    .AddPostgres("postgres")
+    .AddPostgres("postgres", port: 54320)
     .WithImage("ankane/pgvector")
     .WithImageTag("latest")
     .WithDataVolume("postgres-data")
