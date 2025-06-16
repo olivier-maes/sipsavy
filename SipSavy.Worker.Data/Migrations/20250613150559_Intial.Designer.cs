@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 using SipSavy.Worker.Data;
 
 #nullable disable
@@ -11,17 +12,18 @@ using SipSavy.Worker.Data;
 namespace SipSavy.Worker.Data.Migrations
 {
     [DbContext(typeof(WorkerDbContext))]
-    [Migration("20250611083205_Initial")]
-    partial class Initial
+    [Migration("20250613150559_Intial")]
+    partial class Intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("SipSavy.Worker.Data.Domain.Video", b =>
@@ -55,6 +57,53 @@ namespace SipSavy.Worker.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("videos", (string)null);
+                });
+
+            modelBuilder.Entity("SipSavy.Worker.Data.Domain.VideoChunk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Vector>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("vector(384)");
+
+                    b.Property<int>("VideoId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Embedding");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "ivfflat");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
+
+                    b.HasIndex("VideoId");
+
+                    b.ToTable("video_chunks", (string)null);
+                });
+
+            modelBuilder.Entity("SipSavy.Worker.Data.Domain.VideoChunk", b =>
+                {
+                    b.HasOne("SipSavy.Worker.Data.Domain.Video", "Video")
+                        .WithMany("Chunks")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Video");
+                });
+
+            modelBuilder.Entity("SipSavy.Worker.Data.Domain.Video", b =>
+                {
+                    b.Navigation("Chunks");
                 });
 #pragma warning restore 612, 618
         }

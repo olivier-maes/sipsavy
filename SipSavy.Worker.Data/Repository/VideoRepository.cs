@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.Worker.Data.Domain;
 
-namespace SipSavy.Worker.Data;
+namespace SipSavy.Worker.Data.Repository;
 
 public class VideoRepository(WorkerDbContext dbContext) : IVideoRepository
 {
@@ -12,7 +12,7 @@ public class VideoRepository(WorkerDbContext dbContext) : IVideoRepository
         return video;
     }
 
-    public async Task<Video?> UpdateVideo(int id, string transcription, Status status)
+    public async Task<Video?> UpdateVideo(int id, string? transcription, Status? status)
     {
         var existingVideo = await dbContext.Videos.FirstOrDefaultAsync(x => x.Id == id);
         if (existingVideo is null)
@@ -20,8 +20,15 @@ public class VideoRepository(WorkerDbContext dbContext) : IVideoRepository
             return null;
         }
 
-        existingVideo.Transcription = transcription;
-        existingVideo.Status = status;
+        if (transcription is not null)
+        {
+            existingVideo.Transcription = transcription;
+        }
+
+        if (status is not null)
+        {
+            existingVideo.Status = status.Value;
+        }
 
         await dbContext.SaveChangesAsync();
 

@@ -8,6 +8,11 @@ public sealed class ExtractTranscriptionHandler(YoutubeClient youtubeClient)
 {
     public async Task<ExtractTranscriptionResponse> Handle(ExtractTranscriptionRequest request)
     {
+        if (string.IsNullOrEmpty(request.YoutubeVideoId))
+        {
+            return new ExtractTranscriptionResponse();
+        }
+
         var trackManifest = await youtubeClient.Videos.ClosedCaptions.GetManifestAsync(request.YoutubeVideoId);
 
         if (trackManifest.Tracks.Count == 0)
