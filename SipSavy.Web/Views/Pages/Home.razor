@@ -30,7 +30,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var res = await GetCocktailsOverviewHandler.Handle(new GetCocktailsOverviewRequest());
+        var res = await GetCocktailsOverviewHandler.Handle(new GetCocktailsOverviewRequest(), CancellationToken.None);
         Cocktails = res.Cocktails;
     }
 }

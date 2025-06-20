@@ -1,13 +1,13 @@
 using Pgvector;
 using SipSavy.Core;
-using SipSavy.Worker.Data;
+using SipSavy.Data;
 
 namespace SipSavy.Worker.Features.VideoChunk.AddVideoChunks;
 
 internal sealed class AddVideoChunksHandler(IVectorStore vectorStore)
     : IHandler<AddVideoChunksRequest, AddVideoChunksResponse>
 {
-    public async Task<AddVideoChunksResponse> Handle(AddVideoChunksRequest request)
+    public async Task<AddVideoChunksResponse> Handle(AddVideoChunksRequest request, CancellationToken cancellationToken)
     {
         await vectorStore.StoreChunksAsync(request.VideoChunks.Select(x => new Data.Domain.VideoChunk
         {

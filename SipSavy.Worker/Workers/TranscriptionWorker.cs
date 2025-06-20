@@ -1,9 +1,9 @@
-using SipSavy.Worker.Data.Domain;
+using SipSavy.Data.Domain;
 using SipSavy.Worker.Features.Video.AddNewVideos;
 using SipSavy.Worker.Features.Video.GetVideosByStatus;
 using SipSavy.Worker.Features.Video.UpdateVideo;
-using SipSavy.Worker.Youtube.Features.ExtractTranscription;
-using SipSavy.Worker.Youtube.Features.GetVideosByChannelId;
+using SipSavy.Worker.Features.Youtube.ExtractTranscription;
+using SipSavy.Worker.Features.Youtube.GetVideosByChannelId;
 
 namespace SipSavy.Worker.Workers;
 
@@ -11,14 +11,15 @@ internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFacto
 {
     private Timer? _timer;
 
-    public Task StartAsync(CancellationToken stoppingToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine($"Transcription worker running at: {DateTimeOffset.Now}");
-        _timer = new Timer(async void (_) => await DoWork(), null, TimeSpan.Zero, TimeSpan.FromHours(1));
+        _timer = new Timer(async void (_) => await DoWork(cancellationToken), null, TimeSpan.Zero,
+            TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
 
-    private async Task DoWork()
+    private async Task DoWork(CancellationToken cancellationToken)
     {
         using var scope = serviceScopeFactory.CreateScope();
         var getVideosByChannelIdHandler = scope.ServiceProvider.GetRequiredService<GetVideosByChannelIdHandler>();
@@ -27,9 +28,12 @@ internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFacto
         var getVideosByStatusHandler = scope.ServiceProvider.GetRequiredService<GetVideosByStatusHandler>();
         var updateVideoHandler = scope.ServiceProvider.GetRequiredService<UpdateVideoHandler>();
 
+        var youtubeChannelId = Environment.GetEnvironmentVariable("YOUTUBE_CHANNEL_ID") ??
+                               throw new Exception("YOUTUBE_CHANNEL_ID environment variable not set");
+
         // Get all videos from a specific YouTube channel
         var videosByChannelIdResponse = await getVideosByChannelIdHandler
-            .Handle(new GetVideosByChannelIdRequest("UCioZY1p0bZ4Xt-yodw8_cBQ"));
+            .Handle(new GetVideosByChannelIdRequest(youtubeChannelId), cancellationToken);
 
         // Add the new videos to the database
         await addNewVideosHandler.Handle(new AddNewVideosRequest
@@ -39,19 +43,25 @@ internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFacto
                 VideoId = x.Id,
                 Title = x.Title
             }).ToList()
-        });
+        }, cancellationToken);
 
         // Get videos that need transcription
-        var getVideosByStatusResponse = await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.New));
+        var getVideosByStatusResponse =
+            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.New), cancellationToken);
         foreach (var v in getVideosByStatusResponse.Videos)
         {
             // Extract transcription
-            var extractTranscriptionResponse =
-                await extractTranscriptionHandler.Handle(new ExtractTranscriptionRequest(v.YoutubeId));
+            var extractTranscriptionResponse = await extractTranscriptionHandler.Handle(
+                new ExtractTranscriptionRequest(v.YoutubeId),
+                cancellationToken
+            );
 
             // Update video
-            var updatedVideo = await updateVideoHandler.Handle(new UpdateVideoRequest(v.Id,
-                extractTranscriptionResponse.Transcription, Status.TranscriptionFetched));
+            await updateVideoHandler.Handle(new UpdateVideoRequest(
+                v.Id,
+                extractTranscriptionResponse.Transcription,
+                Status.TranscriptionFetched
+            ), cancellationToken);
         }
     }
 

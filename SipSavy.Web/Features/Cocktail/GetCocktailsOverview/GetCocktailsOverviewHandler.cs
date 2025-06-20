@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.Core;
-using SipSavy.Web.Data;
+using SipSavy.Data;
 
 namespace SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
 
 internal sealed class GetCocktailsOverviewHandler(IQueryFacade queryFacade)
     : IHandler<GetCocktailsOverviewRequest, GetCocktailsOverviewResponse>
 {
-    public async Task<GetCocktailsOverviewResponse> Handle(GetCocktailsOverviewRequest request)
+    public async Task<GetCocktailsOverviewResponse> Handle(GetCocktailsOverviewRequest request,
+        CancellationToken cancellationToken)
     {
         return new GetCocktailsOverviewResponse
         {
@@ -15,7 +16,7 @@ internal sealed class GetCocktailsOverviewHandler(IQueryFacade queryFacade)
             {
                 Id = x.Id,
                 Name = x.Name
-            }).ToListAsync()
+            }).ToListAsync(cancellationToken)
         };
     }
 }

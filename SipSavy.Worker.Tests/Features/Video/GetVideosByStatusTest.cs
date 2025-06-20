@@ -1,5 +1,4 @@
-using SipSavy.Worker.Data;
-using SipSavy.Worker.Data.Domain;
+using SipSavy.Data.Domain;
 using SipSavy.Worker.Features.Video.GetVideosByStatus;
 using SipSavy.Worker.Tests.Fixtures;
 

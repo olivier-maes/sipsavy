@@ -1,4 +1,4 @@
-using SipSavy.Worker.Data.Domain;
+using SipSavy.Data.Domain;
 
 namespace SipSavy.Worker.Features.Video.UpdateVideo;
 
