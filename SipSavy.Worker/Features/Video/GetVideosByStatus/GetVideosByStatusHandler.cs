@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.Core;
-using SipSavy.Worker.Data;
+using SipSavy.Data;
 
 namespace SipSavy.Worker.Features.Video.GetVideosByStatus;
 

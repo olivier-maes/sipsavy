@@ -1,6 +1,6 @@
 using Pgvector;
 using SipSavy.Core;
-using SipSavy.Worker.Data;
+using SipSavy.Data;
 
 namespace SipSavy.Worker.Features.VideoChunk.AddVideoChunks;
 

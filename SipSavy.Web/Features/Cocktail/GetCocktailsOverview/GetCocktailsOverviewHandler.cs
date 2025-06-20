@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.Core;
-using SipSavy.Web.Data;
+using SipSavy.Data;
 
 namespace SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
 

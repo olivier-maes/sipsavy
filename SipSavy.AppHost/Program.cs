@@ -8,8 +8,7 @@ var postgres = builder
     .WithDataVolume("postgres-data")
     .WithLifetime(ContainerLifetime.Persistent);
 
-var webDb = postgres.AddDatabase("sipsavy-web-db");
-var workerDb = postgres.AddDatabase("sipsavy-worker-db");
+var database = postgres.AddDatabase("sipsavy");
 
 // Ollama
 var ollama = builder.AddOllama("ollama")
@@ -17,27 +16,20 @@ var ollama = builder.AddOllama("ollama")
     .WithLifetime(ContainerLifetime.Persistent)
     .WithGPUSupport();
 
-ollama.AddModel("embedding", "all-minilm-l6");
-ollama.AddModel("chat", "llama3.1");
-
-// Migration Service
-var migrationService = builder.AddProject<Projects.SipSavy_MigrationService>("migration-service")
-    .WithReference(webDb)
-    .WithReference(workerDb)
-    .WaitFor(postgres);
-
-// SipSavy Web application
-builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
-    .WithReference(webDb)
-    .WaitFor(postgres)
-    .WaitForCompletion(migrationService);
-
 // SipSavy Worker application
-builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
-    .WithReference(workerDb)
+var worker = builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
+    .WithReference(database)
     .WithReference(ollama)
     .WaitFor(postgres)
     .WaitFor(ollama)
-    .WaitForCompletion(migrationService);
+    .WithEnvironment("YOUTUBE_CHANNEL_ID", "UCioZY1p0bZ4Xt-yodw8_cBQ")
+    .WithEnvironment("AI_CHAT_MODEL", "llama3.1")
+    .WithEnvironment("AI_EMBEDDING_MODEL", "all-minilm");
+
+// SipSavy Web application
+builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
+    .WithReference(database)
+    .WaitFor(postgres)
+    .WaitFor(worker);
 
 builder.Build().Run();

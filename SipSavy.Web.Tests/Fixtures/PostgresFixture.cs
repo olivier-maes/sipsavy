@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using SipSavy.Data;
+using SipSavy.Data.Domain;
 using Testcontainers.PostgreSql;
 
 namespace SipSavy.Web.Tests.Fixtures;
@@ -17,9 +19,9 @@ public sealed class PostgresFixture : IAsyncLifetime
         return PostgresContainer.DisposeAsync().AsTask();
     }
 
-    public static async Task<WebDbContext> GetDbContext()
+    public static async Task<AppDbContext> GetDbContext()
     {
-        var dbContext = new WebDbContext(new DbContextOptionsBuilder<WebDbContext>()
+        var dbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(PostgresContainer.GetConnectionString())
             .Options);
 
@@ -29,7 +31,7 @@ public sealed class PostgresFixture : IAsyncLifetime
         return dbContext;
     }
 
-    private static async Task SeedDatabase(WebDbContext dbContext)
+    private static async Task SeedDatabase(AppDbContext dbContext)
     {
         await dbContext.AddRangeAsync(new List<Cocktail>
         {

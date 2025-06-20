@@ -20,15 +20,18 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\SipSavy.Core\SipSavy.Core.csproj" />
+        <ProjectReference Include="..\SipSavy.Data\SipSavy.Data.csproj" />
         <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj"/>
-        <ProjectReference Include="..\SipSavy.Worker.AI\SipSavy.Worker.AI.csproj" />
-        <ProjectReference Include="..\SipSavy.Worker.Data\SipSavy.Worker.Data.csproj"/>
-        <ProjectReference Include="..\SipSavy.Worker.Youtube\SipSavy.Worker.Youtube.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>SipSavy.Worker.Tests</_Parameter1>
         </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\Youtube\" />
     </ItemGroup>
 </Project>

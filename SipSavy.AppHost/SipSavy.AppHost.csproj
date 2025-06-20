@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SipSavy.MigrationService\SipSavy.MigrationService.csproj" />
       <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj" />
       <ProjectReference Include="..\SipSavy.Web\SipSavy.Web.csproj" />
       <ProjectReference Include="..\SipSavy.Worker\SipSavy.Worker.csproj" />

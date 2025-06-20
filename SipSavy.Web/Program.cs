@@ -1,7 +1,8 @@
-using SipSavy.Web.Data;
+using SipSavy.Data;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
 using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,11 @@ builder.Services.AddRazorComponents();
 builder.AddServiceDefaults();
 
 // Data
-builder.AddNpgsqlDbContext<WebDbContext>("sipsavy-web-db");
+builder.AddNpgsqlDbContext<AppDbContext>("sipsavy",
+    configureDbContextOptions: dbContextOptionsBuilder =>
+    {
+        dbContextOptionsBuilder.UseNpgsql(op => { op.UseVector(); });
+    });
 
 builder.Services.AddScoped<IQueryFacade, QueryFacade>();
 

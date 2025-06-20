@@ -1,6 +1,6 @@
-using SipSavy.Worker.AI.Features.Chunk.ChunkTextByFixedSize;
-using SipSavy.Worker.AI.Features.Embedding.GetEmbeddings;
-using SipSavy.Worker.Data.Domain;
+using SipSavy.Data.Domain;
+using SipSavy.Worker.Features.Chunk.ChunkTextByFixedSize;
+using SipSavy.Worker.Features.Embedding.GetEmbeddings;
 using SipSavy.Worker.Features.Video.GetVideosByStatus;
 using SipSavy.Worker.Features.Video.UpdateVideo;
 using SipSavy.Worker.Features.VideoChunk.AddVideoChunks;

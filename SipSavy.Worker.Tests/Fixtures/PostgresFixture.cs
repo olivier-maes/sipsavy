@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Worker.Data;
-using SipSavy.Worker.Data.Domain;
+using SipSavy.Data;
+using SipSavy.Data.Domain;
 using SipSavy.Worker.Tests.TestData;
 using Testcontainers.PostgreSql;
 
@@ -20,9 +20,9 @@ public sealed class PostgresFixture : IAsyncLifetime
         return PostgresContainer.DisposeAsync().AsTask();
     }
 
-    public static async Task<WorkerDbContext> GetDbContext()
+    public static async Task<AppDbContext> GetDbContext()
     {
-        var dbContext = new WorkerDbContext(new DbContextOptionsBuilder<WorkerDbContext>()
+        var dbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(PostgresContainer.GetConnectionString())
             .Options);
 
@@ -32,7 +32,7 @@ public sealed class PostgresFixture : IAsyncLifetime
         return dbContext;
     }
 
-    private static async Task SeedDatabase(WorkerDbContext dbContext)
+    private static async Task SeedDatabase(AppDbContext dbContext)
     {
         await dbContext.AddRangeAsync(new List<Video>
         {

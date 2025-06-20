@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.Core;
-using SipSavy.Worker.Data;
-using SipSavy.Worker.Data.Repository;
+using SipSavy.Data;
+using SipSavy.Data.Repository;
 
 namespace SipSavy.Worker.Features.Video.AddNewVideos;
 
