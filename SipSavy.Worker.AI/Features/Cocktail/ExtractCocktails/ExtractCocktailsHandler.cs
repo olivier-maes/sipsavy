@@ -59,7 +59,7 @@ public class ExtractCocktailsHandler
         return new ExtractCocktailsResponse();
     }
 
-    private static string BuildRagPrompt(string transcript)
+    private static string BuildRagPrompt(string transcript, string context = "")
     {
         var format = JsonSerializer.Serialize(new ExtractCocktailsResponse.CocktailDto
         {
@@ -83,6 +83,7 @@ public class ExtractCocktailsHandler
                 {transcript}
 
                 SIMILAR RECIPES FOR CONTEXT:
+                {context}
 
                 Extract the recipe and return it as JSON with this structure:
                 {format}
