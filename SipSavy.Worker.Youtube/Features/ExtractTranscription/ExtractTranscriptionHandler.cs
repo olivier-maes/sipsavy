@@ -6,14 +6,16 @@ namespace SipSavy.Worker.Youtube.Features.ExtractTranscription;
 public sealed class ExtractTranscriptionHandler(YoutubeClient youtubeClient)
     : IHandler<ExtractTranscriptionRequest, ExtractTranscriptionResponse>
 {
-    public async Task<ExtractTranscriptionResponse> Handle(ExtractTranscriptionRequest request)
+    public async Task<ExtractTranscriptionResponse> Handle(ExtractTranscriptionRequest request,
+        CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.YoutubeVideoId))
         {
             return new ExtractTranscriptionResponse();
         }
 
-        var trackManifest = await youtubeClient.Videos.ClosedCaptions.GetManifestAsync(request.YoutubeVideoId);
+        var trackManifest =
+            await youtubeClient.Videos.ClosedCaptions.GetManifestAsync(request.YoutubeVideoId, cancellationToken);
 
         if (trackManifest.Tracks.Count == 0)
         {
@@ -24,7 +26,7 @@ public sealed class ExtractTranscriptionHandler(YoutubeClient youtubeClient)
                     trackManifest.Tracks.FirstOrDefault(x => x.Language.Code.StartsWith("en")) ??
                     trackManifest.Tracks[0];
 
-        var captions = await youtubeClient.Videos.ClosedCaptions.GetAsync(track);
+        var captions = await youtubeClient.Videos.ClosedCaptions.GetAsync(track, cancellationToken);
         if (captions.Captions.Count == 0)
         {
             return new ExtractTranscriptionResponse();

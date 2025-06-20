@@ -12,11 +12,11 @@ internal sealed class ExtractCocktailWorker(IServiceScopeFactory serviceScopeFac
     public Task StartAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine($"Cocktail extraction worker running at: {DateTimeOffset.Now}");
-        _timer = new Timer(async void (_) => await DoWork(), null, TimeSpan.Zero, TimeSpan.FromHours(1));
+        _timer = new Timer(async void (_) => await DoWork(cancellationToken), null, TimeSpan.Zero, TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
 
-    private async Task DoWork()
+    private async Task DoWork(CancellationToken cancellationToken)
     {
         using var scope = serviceScopeFactory.CreateScope();
         var getVideosByStatusHandler = scope.ServiceProvider.GetRequiredService<GetVideosByStatusHandler>();
@@ -25,19 +25,19 @@ internal sealed class ExtractCocktailWorker(IServiceScopeFactory serviceScopeFac
 
         // Get all videos that need cocktail extraction
         var getVideosByStatusResponse =
-            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.Embedded));
+            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.Embedded), cancellationToken);
 
         foreach (var v in getVideosByStatusResponse.Videos)
         {
             // Extract cocktails from the video
             var extractCocktailsResponse =
-                await extractCocktailsHandler.Handle(new ExtractCocktailsRequest(v.Id));
+                await extractCocktailsHandler.Handle(new ExtractCocktailsRequest(v.Id), cancellationToken);
 
             // TODO: Send cocktails to SipSavy.Web
 
             // Update the video status to CocktailExtracted
             var updateVideoResponse = await updateVideoHandler.Handle(
-                new UpdateVideoRequest(v.Id, null, Status.Processed));
+                new UpdateVideoRequest(v.Id, null, Status.Processed), cancellationToken);
         }
     }
 

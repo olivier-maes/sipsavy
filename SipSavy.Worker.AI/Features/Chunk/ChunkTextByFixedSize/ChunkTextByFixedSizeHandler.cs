@@ -4,7 +4,8 @@ namespace SipSavy.Worker.AI.Features.Chunk.ChunkTextByFixedSize;
 
 public sealed class ChunkTextByFixedSizeHandler : IHandler<ChunkTextByFixedSizeRequest, ChunkTextByFixedSizeResponse>
 {
-    public async Task<ChunkTextByFixedSizeResponse> Handle(ChunkTextByFixedSizeRequest request)
+    public async Task<ChunkTextByFixedSizeResponse> Handle(ChunkTextByFixedSizeRequest request,
+        CancellationToken cancellationToken)
     {
         var chunks = new List<ChunkTextByFixedSizeResponse.TextChunkDto>();
 

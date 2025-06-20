@@ -13,7 +13,7 @@ public class GetCocktailsOverviewHandlerTest : IClassFixture<PostgresFixture>
 
         // Act
         var sut = new GetCocktailsOverviewHandler(queryFacade);
-        var response = await sut.Handle(new GetCocktailsOverviewRequest());
+        var response = await sut.Handle(new GetCocktailsOverviewRequest(), CancellationToken.None);
 
         // Assert
         Assert.IsType<GetCocktailsOverviewResponse>(response);

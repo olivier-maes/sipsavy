@@ -8,5 +8,5 @@ public class VideoChunk
     public string Content { get; set; } = string.Empty;
     public Vector Embedding { get; set; }
     public int VideoId { get; set; }
-    public Video Video { get; set; } = new();
+    public Video Video { get; set; }
 }

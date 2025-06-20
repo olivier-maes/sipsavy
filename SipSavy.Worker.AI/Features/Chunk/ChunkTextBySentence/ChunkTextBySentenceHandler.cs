@@ -6,7 +6,7 @@ namespace SipSavy.Worker.AI.Features.Chunk.ChunkTextBySentence;
 
 public sealed class ChunkTextBySentenceHandler : IHandler<ChunkTextBySentenceRequest, ChunkTextBySentenceResponse>
 {
-    public async Task<ChunkTextBySentenceResponse> Handle(ChunkTextBySentenceRequest request)
+    public async Task<ChunkTextBySentenceResponse> Handle(ChunkTextBySentenceRequest request, CancellationToken cancellationToken)
     {
         var chunks = new List<ChunkTextBySentenceResponse.TextChunkDto>();
         var sentences = SplitIntoSentences(request.Text);

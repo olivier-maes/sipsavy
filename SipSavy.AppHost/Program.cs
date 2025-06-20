@@ -17,8 +17,8 @@ var ollama = builder.AddOllama("ollama")
     .WithLifetime(ContainerLifetime.Persistent)
     .WithGPUSupport();
 
-var embeddings = ollama.AddModel("embedding", "all-minilm");
-var chat = ollama.AddModel("chat", "llama3.1");
+ollama.AddModel("embedding", "all-minilm-l6");
+ollama.AddModel("chat", "llama3.1");
 
 // Migration Service
 var migrationService = builder.AddProject<Projects.SipSavy_MigrationService>("migration-service")
@@ -35,7 +35,7 @@ builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
 // SipSavy Worker application
 builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
     .WithReference(workerDb)
-    .WithReference(embeddings)
+    .WithReference(ollama)
     .WaitFor(postgres)
     .WaitFor(ollama)
     .WaitForCompletion(migrationService);

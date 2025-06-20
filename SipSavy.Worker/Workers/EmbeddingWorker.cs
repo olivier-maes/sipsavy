@@ -14,11 +14,12 @@ internal sealed class EmbeddingWorker(IServiceScopeFactory serviceScopeFactory) 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine($"Embedding worker running at: {DateTimeOffset.Now}");
-        _timer = new Timer(async void (_) => await DoWork(), null, TimeSpan.Zero, TimeSpan.FromHours(1));
+        _timer = new Timer(async void (_) => await DoWork(cancellationToken), null, TimeSpan.Zero,
+            TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
 
-    private async Task DoWork()
+    private async Task DoWork(CancellationToken cancellationToken)
     {
         using var scope = serviceScopeFactory.CreateScope();
         var getVideosByStatusHandler = scope.ServiceProvider.GetRequiredService<GetVideosByStatusHandler>();
@@ -31,7 +32,8 @@ internal sealed class EmbeddingWorker(IServiceScopeFactory serviceScopeFactory) 
 
         // Get all videos that need embedding
         var getVideosByStatusResponse =
-            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.TranscriptionFetched));
+            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.TranscriptionFetched),
+                cancellationToken);
 
         foreach (var v in getVideosByStatusResponse.Videos)
         {
@@ -39,13 +41,13 @@ internal sealed class EmbeddingWorker(IServiceScopeFactory serviceScopeFactory) 
 
             // Chunk the transcription
             var chunkTextByFixedSizeResponse =
-                await chunkTextByFixedSizeHandler.Handle(new ChunkTextByFixedSizeRequest(v.Transcription));
+                await chunkTextByFixedSizeHandler.Handle(new ChunkTextByFixedSizeRequest(v.Transcription), cancellationToken);
 
             // Embed the transcription chunks
             foreach (var chunk in chunkTextByFixedSizeResponse.Chunks)
             {
                 var getEmbeddingsHandlerResponse = await getEmbeddingsHandler.Handle(
-                    new GetEmbeddingsRequest(chunk.Content));
+                    new GetEmbeddingsRequest(chunk.Content), cancellationToken);
 
                 videoChunks.Add(new AddVideoChunksRequest.VideoChunkDto
                 {
@@ -56,11 +58,12 @@ internal sealed class EmbeddingWorker(IServiceScopeFactory serviceScopeFactory) 
             }
 
             // Save the embeddings to the vector store
-            await addVideoChunksHandler.Handle(new AddVideoChunksRequest { VideoChunks = videoChunks });
+            await addVideoChunksHandler.Handle(new AddVideoChunksRequest { VideoChunks = videoChunks },
+                cancellationToken);
 
             // Update the video status to Embedded
-            var updateVideoResponse = await updateVideoHandler.Handle(
-                new UpdateVideoRequest(v.Id, null, Status.Embedded));
+            await updateVideoHandler.Handle(
+                new UpdateVideoRequest(v.Id, null, Status.Embedded), cancellationToken);
         }
     }
 

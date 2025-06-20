@@ -7,9 +7,10 @@ namespace SipSavy.Worker.Youtube.Features.GetVideosByChannelId;
 public sealed class GetVideosByChannelIdHandler(YoutubeClient youtubeClient)
     : IHandler<GetVideosByChannelIdRequest, GetVideosByChannelIdResponse>
 {
-    public async Task<GetVideosByChannelIdResponse> Handle(GetVideosByChannelIdRequest request)
+    public async Task<GetVideosByChannelIdResponse> Handle(GetVideosByChannelIdRequest request,
+        CancellationToken cancellationToken)
     {
-        var videos = await youtubeClient.Channels.GetUploadsAsync(request.ChannelId);
+        var videos = await youtubeClient.Channels.GetUploadsAsync(request.ChannelId, cancellationToken);
 
         return new GetVideosByChannelIdResponse
         {

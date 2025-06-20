@@ -1,44 +1,93 @@
+using System.Text;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using OllamaSharp;
-using OllamaSharp.Models.Chat;
+using OllamaSharp.Models;
 using SipSavy.Core;
+using SipSavy.Worker.Data;
 using SipSavy.Worker.Data.Domain;
 
 namespace SipSavy.Worker.AI.Features.Cocktail.ExtractCocktails;
 
-public class ExtractCocktailsHandler(IOllamaApiClient ollamaApiClient)
+public class ExtractCocktailsHandler
     : IHandler<ExtractCocktailsRequest, ExtractCocktailsResponse>
 {
-    private readonly string _basePrompt =
-        "You are an expert bartender. Your task is to extract cocktail recipes from a video transcript. " +
-        "The transcript will be provided to you, and you need to identify the cocktails mentioned, " +
-        "their ingredients, and any specific instructions given in the video. " +
-        "Please provide the extracted cocktails in a structured format.";
+    private readonly IQueryFacade _queryFacade;
+    private readonly IOllamaApiClient _ollamaApiClient;
 
-    public async Task<ExtractCocktailsResponse> Handle(ExtractCocktailsRequest request)
+    public ExtractCocktailsHandler(IQueryFacade queryFacade, IOllamaApiClient ollamaApiClient)
     {
-        var example = new ExtractCocktailsResponse.CocktailDto
+        _queryFacade = queryFacade;
+        _ollamaApiClient = ollamaApiClient;
+        _ollamaApiClient.SelectedModel = "llama3.1";
+    }
+
+    public async Task<ExtractCocktailsResponse> Handle(
+        ExtractCocktailsRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var fullResponse = new StringBuilder();
+        var video = await _queryFacade.Videos.SingleAsync(x => x.Id == request.VideoId, cancellationToken);
+        var prompt = BuildRagPrompt(video.Transcription);
+
+        var ollamaRequest = new GenerateRequest
         {
-            Name = "The cocktail name",
-            Description = "A brief description of the cocktail",
-            Ingredients = new List<ExtractCocktailsResponse.IngredientDto>(
+            Model = "llama3.1",
+            Prompt = prompt,
+            Stream = true,
+            Options = new RequestOptions
+            {
+                Temperature = 0.1f,
+                TopK = 10,
+                TopP = 0.9f,
+                NumPredict = 500
+            }
+        };
+
+        await foreach (var response in _ollamaApiClient.GenerateAsync(ollamaRequest, cancellationToken))
+        {
+            fullResponse.Append(response?.Response);
+
+            if (response is not null && response.Done)
+                break;
+        }
+
+        var jsonResponse = fullResponse.ToString();
+        Console.WriteLine(jsonResponse);
+
+        return new ExtractCocktailsResponse();
+    }
+
+    private static string BuildRagPrompt(string transcript)
+    {
+        var format = JsonSerializer.Serialize(new ExtractCocktailsResponse.CocktailDto
+        {
+            Name = "Recipe name",
+            Description = "Recipe description",
+            Ingredients =
             [
                 new ExtractCocktailsResponse.IngredientDto
                 {
                     Name = "Ingredient name",
-                    Quantity = 1.0f,
+                    Quantity = 0.5f,
                     Unit = Unit.Ounce
                 }
-            ])
-        };
+            ]
+        });
 
-        var format = JsonSerializer.Serialize(example);
-        var prompt = $"{_basePrompt}\n\nExample:\n{format}";
-        var chat = new Chat(ollamaApiClient);
-        chat.Messages.Add(new Message(ChatRole.System, prompt));
+        return $"""
+                Extract a cocktail recipe from the following transcript. Use the similar recipes below as context to fill in missing details and correct any errors.
 
-        var response =  chat.SendAsync(prompt);
+                TRANSCRIPT:
+                {transcript}
 
-        return new ExtractCocktailsResponse();
+                SIMILAR RECIPES FOR CONTEXT:
+
+                Extract the recipe and return it as JSON with this structure:
+                {format}
+
+                Be precise with measurements and use the context recipes to infer missing information.
+                """;
     }
 }

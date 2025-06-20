@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SipSavy.ServiceDefaults;
 using SipSavy.Worker.AI.Features.Chunk.ChunkTextByFixedSize;
+using SipSavy.Worker.AI.Features.Cocktail.ExtractCocktails;
 using SipSavy.Worker.AI.Features.Embedding.GetEmbeddings;
 using SipSavy.Worker.Data;
 using SipSavy.Worker.Data.Repository;
@@ -19,7 +20,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 // Ollama
-builder.AddOllamaApiClient("embedding").AddEmbeddingGenerator();
+builder.AddOllamaApiClient("ollama").AddEmbeddingGenerator();
 
 // Data
 builder.AddNpgsqlDbContext<WorkerDbContext>("sipsavy-worker-db",
@@ -44,10 +45,12 @@ builder.Services.AddScoped<UpdateVideoHandler>();
 builder.Services.AddScoped<GetEmbeddingsHandler>();
 builder.Services.AddScoped<ChunkTextByFixedSizeHandler>();
 builder.Services.AddScoped<AddVideoChunksHandler>();
+builder.Services.AddScoped<ExtractCocktailsHandler>();
 
 // Worker
 builder.Services.AddHostedService<TranscriptionWorker>();
 builder.Services.AddHostedService<EmbeddingWorker>();
+builder.Services.AddHostedService<ExtractCocktailWorker>();
 
 // Ensure database is created and pgvector extension is installed
 using (var scope = builder.Services.BuildServiceProvider().CreateScope())
@@ -57,7 +60,7 @@ using (var scope = builder.Services.BuildServiceProvider().CreateScope())
     if (dbContext.Database.GetPendingMigrations().Any())
     {
         await dbContext.Database.MigrateAsync();
-        
+
         await dbContext.Database.OpenConnectionAsync();
         await ((Npgsql.NpgsqlConnection)dbContext.Database.GetDbConnection()).ReloadTypesAsync();
         await dbContext.Database.CloseConnectionAsync();
