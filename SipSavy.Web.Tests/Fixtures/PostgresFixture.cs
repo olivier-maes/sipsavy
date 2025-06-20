@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Data;
-using SipSavy.Data.Domain;
 using Testcontainers.PostgreSql;
 
 namespace SipSavy.Web.Tests.Fixtures;
