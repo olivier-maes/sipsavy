@@ -26,7 +26,7 @@ var worker = builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
     .WithReference(ollama)
     .WaitFor(postgres)
     .WaitFor(ollama)
-    .WaitFor(migrationWorker)
+    .WaitForCompletion(migrationWorker)
     .WithEnvironment("YOUTUBE_CHANNEL_ID", "UCioZY1p0bZ4Xt-yodw8_cBQ")
     .WithEnvironment("AI_CHAT_MODEL", "llama3.1");
 
@@ -35,6 +35,6 @@ builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
     .WithReference(database)
     .WaitFor(postgres)
     .WaitFor(worker)
-    .WaitFor(migrationWorker);
+    .WaitForCompletion(migrationWorker);
 
 builder.Build().Run();
