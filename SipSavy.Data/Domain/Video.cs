@@ -9,7 +9,5 @@ public sealed class Video
 
     public Status Status { get; set; } = Status.New;
 
-    public List<VideoChunk> Chunks { get; set; } = [];
-
     public List<Cocktail> Cocktails { get; set; } = [];
 }

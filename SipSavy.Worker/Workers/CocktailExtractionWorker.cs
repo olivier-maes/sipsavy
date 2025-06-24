@@ -28,7 +28,8 @@ internal sealed class CocktailExtractionWorker(IServiceScopeFactory serviceScope
 
         // Get all videos that need cocktail extraction
         var getVideosByStatusResponse =
-            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.Embedded), cancellationToken);
+            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.TranscriptionFetched),
+                cancellationToken);
 
         foreach (var v in getVideosByStatusResponse.Videos)
         {

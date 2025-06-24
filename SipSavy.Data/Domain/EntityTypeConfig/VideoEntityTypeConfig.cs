@@ -24,11 +24,6 @@ public sealed class VideoEntityTypeConfig : IEntityTypeConfiguration<Video>
             .IsRequired()
             .HasConversion<string>();
 
-        builder.HasMany(x => x.Chunks)
-            .WithOne(x => x.Video)
-            .HasForeignKey(x => x.VideoId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.Property(x => x.Transcription);
 
         builder.HasMany(x => x.Cocktails)

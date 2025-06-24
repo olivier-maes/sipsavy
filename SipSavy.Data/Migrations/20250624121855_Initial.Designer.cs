@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Pgvector;
 using SipSavy.Data;
 
 #nullable disable
@@ -12,8 +11,8 @@ using SipSavy.Data;
 namespace SipSavy.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250620132127_AddedCocktailIngredients")]
-    partial class AddedCocktailIngredients
+    [Migration("20250624121855_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +22,6 @@ namespace SipSavy.Data.Migrations
                 .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("SipSavy.Data.Domain.Cocktail", b =>
@@ -117,37 +115,6 @@ namespace SipSavy.Data.Migrations
                     b.ToTable("videos", (string)null);
                 });
 
-            modelBuilder.Entity("SipSavy.Data.Domain.VideoChunk", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Vector>("Embedding")
-                        .IsRequired()
-                        .HasColumnType("vector(384)");
-
-                    b.Property<int>("VideoId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Embedding");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "ivfflat");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
-
-                    b.HasIndex("VideoId");
-
-                    b.ToTable("video_chunks", (string)null);
-                });
-
             modelBuilder.Entity("SipSavy.Data.Domain.Cocktail", b =>
                 {
                     b.HasOne("SipSavy.Data.Domain.Video", "Video")
@@ -170,17 +137,6 @@ namespace SipSavy.Data.Migrations
                     b.Navigation("Cocktail");
                 });
 
-            modelBuilder.Entity("SipSavy.Data.Domain.VideoChunk", b =>
-                {
-                    b.HasOne("SipSavy.Data.Domain.Video", "Video")
-                        .WithMany("Chunks")
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Video");
-                });
-
             modelBuilder.Entity("SipSavy.Data.Domain.Cocktail", b =>
                 {
                     b.Navigation("Ingredients");
@@ -188,8 +144,6 @@ namespace SipSavy.Data.Migrations
 
             modelBuilder.Entity("SipSavy.Data.Domain.Video", b =>
                 {
-                    b.Navigation("Chunks");
-
                     b.Navigation("Cocktails");
                 });
 #pragma warning restore 612, 618

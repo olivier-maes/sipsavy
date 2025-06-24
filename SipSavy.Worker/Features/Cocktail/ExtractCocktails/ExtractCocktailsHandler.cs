@@ -6,7 +6,6 @@ using OllamaSharp.Models;
 using SipSavy.Core;
 using SipSavy.Data;
 using SipSavy.Data.Domain;
-using SipSavy.Worker.Features.Chunk.GetContextChunks;
 
 namespace SipSavy.Worker.Features.Cocktail.ExtractCocktails;
 
@@ -15,15 +14,12 @@ internal sealed class ExtractCocktailsHandler
 {
     private readonly IQueryFacade _queryFacade;
     private readonly IOllamaApiClient _ollamaApiClient;
-    private readonly GetContextChunksHandler _getContextChunksHandler;
     private readonly string _model;
 
-    public ExtractCocktailsHandler(IQueryFacade queryFacade, IOllamaApiClient ollamaApiClient,
-        GetContextChunksHandler getContextChunksHandler)
+    public ExtractCocktailsHandler(IQueryFacade queryFacade, IOllamaApiClient ollamaApiClient)
     {
         _queryFacade = queryFacade;
         _ollamaApiClient = ollamaApiClient;
-        _getContextChunksHandler = getContextChunksHandler;
         _model = Environment.GetEnvironmentVariable("AI_CHAT_MODEL") ??
                  throw new Exception("AI_CHAT_MODEL environment variable is not set.");
         _ollamaApiClient.SelectedModel = _model;
@@ -37,10 +33,7 @@ internal sealed class ExtractCocktailsHandler
         var fullResponse = new StringBuilder();
         var video = await _queryFacade.Videos.SingleAsync(x => x.Id == request.VideoId, cancellationToken);
 
-        var getContextChunksResponse =
-            await _getContextChunksHandler.Handle(new GetContextChunksRequest(video.Transcription), cancellationToken);
-
-        var prompt = BuildRagPrompt(video.Transcription, getContextChunksResponse.Context);
+        var prompt = BuildRagPrompt(video.Transcription);
 
         var ollamaRequest = new GenerateRequest
         {
