@@ -38,28 +38,28 @@ internal sealed class CocktailExtractionWorker(IServiceScopeFactory serviceScope
                 await extractCocktailsHandler.Handle(new ExtractCocktailsRequest(v.Id), cancellationToken);
 
             // Save cocktails to the database
-            var addNewCocktailsResponse =
-                await addNewCocktailsHandler.Handle(new AddNewCocktailsRequest
+            var addNewCocktailsResponse = await addNewCocktailsHandler.Handle(new AddNewCocktailsRequest
+            {
+                VideoId = v.Id,
+                Cocktails = extractCocktailsResponse.Cocktails.Select(x => new AddNewCocktailsRequest.CocktailDto
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    Ingredients = x.Ingredients.Select(i => new AddNewCocktailsRequest.IngredientDto
                     {
-                        VideoId = v.Id,
-                        Cocktails = extractCocktailsResponse.Cocktails.Select(x =>
-                            new AddNewCocktailsRequest.CocktailDto
-                            {
-                                Name = x.Name,
-                                Description = x.Description,
-                                Ingredients = x.Ingredients.Select(i => new AddNewCocktailsRequest.IngredientDto
-                                {
-                                    Name = i.Name,
-                                    Quantity = i.Quantity,
-                                    Unit = i.Unit
-                                }).ToList()
-                            }).ToList()
-                    },
-                    cancellationToken);
+                        Name = i.Name,
+                        Quantity = i.Quantity,
+                        Unit = i.Unit
+                    }).ToList()
+                }).ToList()
+            }, cancellationToken);
 
             // Update the video status to CocktailExtracted
-            var updateVideoResponse = await updateVideoHandler.Handle(
-                new UpdateVideoRequest(v.Id, null, Status.Processed), cancellationToken);
+            if (addNewCocktailsResponse.Cocktails.Count > 0)
+            {
+                var updateVideoResponse = await updateVideoHandler.Handle(
+                    new UpdateVideoRequest(v.Id, null, Status.Processed), cancellationToken);
+            }
         }
     }
 
