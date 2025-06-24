@@ -1,9 +1,12 @@
+using SipSavy.Data;
 using SipSavy.MigrationWorker;
 using SipSavy.ServiceDefaults;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
 
 builder.Services.AddHostedService<Worker>();
 
