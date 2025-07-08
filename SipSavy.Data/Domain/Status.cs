@@ -4,6 +4,5 @@ public enum Status
 {
     New,
     TranscriptionFetched,
-    Embedded,
     Processed
 }

@@ -6,7 +6,6 @@ using OllamaSharp.Models;
 using SipSavy.Core;
 using SipSavy.Data;
 using SipSavy.Data.Domain;
-using SipSavy.Worker.Features.Chunk.GetContextChunks;
 
 namespace SipSavy.Worker.Features.Cocktail.ExtractCocktails;
 
@@ -15,32 +14,24 @@ internal sealed class ExtractCocktailsHandler
 {
     private readonly IQueryFacade _queryFacade;
     private readonly IOllamaApiClient _ollamaApiClient;
-    private readonly GetContextChunksHandler _getContextChunksHandler;
     private readonly string _model;
 
-    public ExtractCocktailsHandler(IQueryFacade queryFacade, IOllamaApiClient ollamaApiClient,
-        GetContextChunksHandler getContextChunksHandler)
+    public ExtractCocktailsHandler(IQueryFacade queryFacade, IOllamaApiClient ollamaApiClient)
     {
         _queryFacade = queryFacade;
         _ollamaApiClient = ollamaApiClient;
-        _getContextChunksHandler = getContextChunksHandler;
         _model = Environment.GetEnvironmentVariable("AI_CHAT_MODEL") ??
                  throw new Exception("AI_CHAT_MODEL environment variable is not set.");
         _ollamaApiClient.SelectedModel = _model;
     }
 
-    public async Task<ExtractCocktailsResponse> Handle(
-        ExtractCocktailsRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<ExtractCocktailsResponse> Handle(ExtractCocktailsRequest request,
+        CancellationToken cancellationToken)
     {
         var fullResponse = new StringBuilder();
         var video = await _queryFacade.Videos.SingleAsync(x => x.Id == request.VideoId, cancellationToken);
 
-        var getContextChunksResponse =
-            await _getContextChunksHandler.Handle(new GetContextChunksRequest(video.Transcription), cancellationToken);
-
-        var prompt = BuildRagPrompt(video.Transcription, getContextChunksResponse.Context);
+        var prompt = BuildPrompt(video.Transcription);
 
         var ollamaRequest = new GenerateRequest
         {
@@ -78,7 +69,7 @@ internal sealed class ExtractCocktailsHandler
         }
     }
 
-    private static string BuildRagPrompt(string transcript, string context = "")
+    private static string BuildPrompt(string transcript)
     {
         var format = JsonSerializer.Serialize(new ExtractCocktailsResponse
         {
@@ -102,20 +93,17 @@ internal sealed class ExtractCocktailsHandler
         });
 
         return $"""
-                Extract a cocktail recipe from the following transcript. Use the similar recipes below as context to fill in missing details and correct any errors.
+                Extract one or more cocktail recipe(s) from the following transcript.
 
                 TRANSCRIPT:
                 {transcript}
-
-                SIMILAR RECIPES FOR CONTEXT:
-                {context}
 
                 Extract the recipe and return it as JSON with this structure:
                 {format}
 
                 The possible units are: {string.Join(", ", Enum.GetNames<Unit>())}
 
-                Be precise with measurements and use the context recipes to infer missing information.
+                Be precise with measurements.
                 Only return the JSON object without any additional text or explanation.
                 """;
     }

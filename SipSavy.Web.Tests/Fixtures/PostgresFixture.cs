@@ -31,6 +31,8 @@ public sealed class PostgresFixture : IAsyncLifetime
 
     private static async Task SeedDatabase(AppDbContext dbContext)
     {
+        await dbContext.AddAsync(TestVideo.Video1);
+
         await dbContext.AddRangeAsync(new List<Cocktail>
         {
             TestCocktail.Cocktail1,
