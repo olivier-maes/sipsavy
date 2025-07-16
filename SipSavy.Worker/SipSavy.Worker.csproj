@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.5.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.6.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.3.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
