@@ -1,15 +1,15 @@
 using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
+using SipSavy.Web.Tests.Fixtures;
 
 namespace SipSavy.Web.Tests.Features.Cocktails;
 
-public class GetCocktailsOverviewHandlerTest : IClassFixture<PostgresFixture>
+public class GetCocktailsOverviewHandlerTest(PostgresFixture fixture) : IClassFixture<PostgresFixture>
 {
     [Fact]
     public async Task Handle_ShouldReturnAllCocktails()
     {
         // Arrange
-        var dbContext = await PostgresFixture.GetDbContext();
-        var queryFacade = new QueryFacade(dbContext);
+        var queryFacade = new QueryFacade(fixture.DbContext);
 
         // Act
         var sut = new GetCocktailsOverviewHandler(queryFacade);

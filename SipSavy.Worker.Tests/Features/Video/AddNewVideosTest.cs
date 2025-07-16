@@ -6,15 +6,14 @@ using SipSavy.Worker.Tests.TestData;
 
 namespace SipSavy.Worker.Tests.Features.Video;
 
-public class AddNewVideosTest : IClassFixture<PostgresFixture>
+public class AddNewVideosTest(PostgresFixture fixture) : IClassFixture<PostgresFixture>, IAsyncLifetime
 {
     [Fact]
     public async Task Handle_ShouldAddNewVideo_WhenVideoDoesNotExist()
     {
         // Arrange
-        var dbContext = await PostgresFixture.GetDbContext();
-        var queryFacade = new QueryFacade(dbContext);
-        var repo = new VideoRepository(dbContext);
+        var queryFacade = new QueryFacade(fixture.DbContext);
+        var repo = new VideoRepository(fixture.DbContext);
 
         var request = new AddNewVideosRequest
         {
@@ -34,10 +33,15 @@ public class AddNewVideosTest : IClassFixture<PostgresFixture>
         Assert.IsType<AddNewVideosResponse>(response);
         Assert.Single(response.Videos);
         Assert.Equal(request.Videos.Find(x => x.VideoId == "video2")?.Title, response.Videos.First().Title);
+    }
 
-        // Cleanup
-        var video = dbContext.Videos.Single(x => x.YoutubeId == "video2");
-        dbContext.Videos.Remove(video);
-        await dbContext.SaveChangesAsync();
+    public Task InitializeAsync()
+    {
+        return fixture.ClearAndReseedAsync();
+    }
+
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
     }
 }

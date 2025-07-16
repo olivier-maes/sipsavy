@@ -6,27 +6,24 @@ namespace SipSavy.Web.Tests.Fixtures;
 public sealed class PostgresFixture : IAsyncLifetime
 {
     private static readonly PostgreSqlContainer PostgresContainer = new PostgreSqlBuilder().Build();
+    public AppDbContext DbContext { get; private set; } = null!;
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-        return PostgresContainer.StartAsync();
-    }
-
-    public Task DisposeAsync()
-    {
-        return PostgresContainer.DisposeAsync().AsTask();
-    }
-
-    public static async Task<AppDbContext> GetDbContext()
-    {
-        var dbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+        await PostgresContainer.StartAsync();
+        
+        DbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(PostgresContainer.GetConnectionString())
             .Options);
 
-        await dbContext.Database.MigrateAsync();
-        await SeedDatabase(dbContext);
+        await DbContext.Database.MigrateAsync();
+        await SeedDatabase(DbContext);
+    }
 
-        return dbContext;
+    public async Task DisposeAsync()
+    {
+        await PostgresContainer.DisposeAsync();
+        await DbContext.DisposeAsync();
     }
 
     private static async Task SeedDatabase(AppDbContext dbContext)

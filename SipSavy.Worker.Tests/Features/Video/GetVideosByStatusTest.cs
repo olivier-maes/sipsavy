@@ -5,14 +5,13 @@ using SipSavy.Worker.Tests.Fixtures;
 
 namespace SipSavy.Worker.Tests.Features.Video;
 
-public class GetVideosByStatusTest : IClassFixture<PostgresFixture>
+public class GetVideosByStatusTest(PostgresFixture fixture) : IClassFixture<PostgresFixture>
 {
     [Fact]
     public async Task? Handle_ShouldReturnVideosByStatus()
     {
         // Arrange
-        var dbContext = await PostgresFixture.GetDbContext();
-        var queryFacade = new QueryFacade(dbContext);
+        var queryFacade = new QueryFacade(fixture.DbContext);
         
         // Act
         var sut = new GetVideosByStatusHandler(queryFacade);
