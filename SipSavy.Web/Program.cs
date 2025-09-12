@@ -13,11 +13,7 @@ builder.Services.AddRazorComponents();
 builder.AddServiceDefaults();
 
 // Data
-builder.AddNpgsqlDbContext<AppDbContext>("sipsavy",
-    configureDbContextOptions: dbContextOptionsBuilder =>
-    {
-        dbContextOptionsBuilder.UseNpgsql(op => { op.UseVector(); });
-    });
+builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
 
 builder.Services.AddScoped<IQueryFacade, QueryFacade>();
 
