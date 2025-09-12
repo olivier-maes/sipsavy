@@ -18,7 +18,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 // Ollama
-builder.AddOllamaApiClient("ollama").AddEmbeddingGenerator();
+builder.AddOllamaApiClient("ollama");
 
 // Data
 builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
