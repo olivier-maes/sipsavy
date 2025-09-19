@@ -1,8 +1,6 @@
 using SipSavy.Data;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
-using SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +15,8 @@ builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
 
 builder.Services.AddScoped<IQueryFacade, QueryFacade>();
 
-// Handlers
-builder.Services.AddScoped<GetCocktailsOverviewHandler>();
+// Mediator
+builder.Services.AddMediator();
 
 var app = builder.Build();
 

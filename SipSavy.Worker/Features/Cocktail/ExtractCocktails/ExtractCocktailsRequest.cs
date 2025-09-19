@@ -1,3 +1,5 @@
+using Mediator;
+
 namespace SipSavy.Worker.Features.Cocktail.ExtractCocktails;
 
-public record ExtractCocktailsRequest(int VideoId);
+public record ExtractCocktailsRequest(int VideoId) : IRequest<ExtractCocktailsResponse>;

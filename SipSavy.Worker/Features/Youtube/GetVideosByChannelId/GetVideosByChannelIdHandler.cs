@@ -1,13 +1,13 @@
-using SipSavy.Core;
+using Mediator;
 using YoutubeExplode;
 using YoutubeExplode.Common;
 
 namespace SipSavy.Worker.Features.Youtube.GetVideosByChannelId;
 
 public sealed class GetVideosByChannelIdHandler(YoutubeClient youtubeClient)
-    : IHandler<GetVideosByChannelIdRequest, GetVideosByChannelIdResponse>
+    : IRequestHandler<GetVideosByChannelIdRequest, GetVideosByChannelIdResponse>
 {
-    public async Task<GetVideosByChannelIdResponse> Handle(GetVideosByChannelIdRequest request,
+    public async ValueTask<GetVideosByChannelIdResponse> Handle(GetVideosByChannelIdRequest request,
         CancellationToken cancellationToken)
     {
         var videos = await youtubeClient.Channels.GetUploadsAsync(request.ChannelId, cancellationToken);

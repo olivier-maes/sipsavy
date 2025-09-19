@@ -1,10 +1,10 @@
+using Mediator;
 using OllamaSharp;
-using SipSavy.Core;
 
 namespace SipSavy.Worker.Features.Embedding.GetEmbeddings;
 
 public sealed class GetEmbeddingsHandler
-    : IHandler<GetEmbeddingsRequest, GetEmbeddingsResponse>
+    : IRequestHandler<GetEmbeddingsRequest, GetEmbeddingsResponse>
 {
     private readonly IOllamaApiClient _ollamaApiClient;
 
@@ -13,7 +13,7 @@ public sealed class GetEmbeddingsHandler
         _ollamaApiClient = ollamaApiClient;
     }
 
-    public async Task<GetEmbeddingsResponse> Handle(GetEmbeddingsRequest request, CancellationToken cancellationToken)
+    public async ValueTask<GetEmbeddingsResponse> Handle(GetEmbeddingsRequest request, CancellationToken cancellationToken)
     {
         _ollamaApiClient.SelectedModel = Environment.GetEnvironmentVariable("AI_EMBEDDING_MODEL") ??
                                          throw new Exception("AI_EMBEDDING_MODEL not found");

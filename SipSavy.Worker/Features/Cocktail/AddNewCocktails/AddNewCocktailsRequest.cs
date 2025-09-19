@@ -1,8 +1,9 @@
-using SipSavy.Data.Domain;
+using Mediator;
+using Unit = SipSavy.Data.Domain.Unit;
 
 namespace SipSavy.Worker.Features.Cocktail.AddNewCocktails;
 
-internal sealed record AddNewCocktailsRequest
+internal sealed record AddNewCocktailsRequest : IRequest<AddNewCocktailsResponse>
 {
     public int VideoId { get; set; }
     public List<CocktailDto> Cocktails { get; set; } = [];

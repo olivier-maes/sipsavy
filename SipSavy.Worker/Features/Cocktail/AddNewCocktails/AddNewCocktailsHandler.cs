@@ -1,13 +1,13 @@
-using SipSavy.Core;
+using Mediator;
 using SipSavy.Data.Domain;
 using SipSavy.Data.Repository;
 
 namespace SipSavy.Worker.Features.Cocktail.AddNewCocktails;
 
 internal sealed class AddNewCocktailsHandler(ICocktailRepository repository)
-    : IHandler<AddNewCocktailsRequest, AddNewCocktailsResponse>
+    : IRequestHandler<AddNewCocktailsRequest, AddNewCocktailsResponse>
 {
-    public async Task<AddNewCocktailsResponse> Handle(AddNewCocktailsRequest request,
+    public async ValueTask<AddNewCocktailsResponse> Handle(AddNewCocktailsRequest request,
         CancellationToken cancellationToken)
     {
         var cocktails = request.Cocktails
