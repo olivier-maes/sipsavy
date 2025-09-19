@@ -7,19 +7,33 @@ using SipSavy.Worker.Features.Video.UpdateVideo;
 
 namespace SipSavy.Worker.Workers;
 
-internal sealed class CocktailExtractionWorker(IMediator mediator) : IHostedService, IDisposable
+internal sealed class CocktailExtractionWorker(
+    ILogger<CocktailExtractionWorker> logger,
+    IServiceScopeFactory serviceScopeFactory)
+    : BackgroundService
 {
-    private Timer? _timer;
+    private const string Name = nameof(CocktailExtractionWorker);
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine($"Cocktail extraction worker running at: {DateTimeOffset.Now}");
-        _timer = new Timer(async void (_) => await DoWork(cancellationToken), null, TimeSpan.Zero,
-            TimeSpan.FromHours(1));
-        return Task.CompletedTask;
+        logger.LogInformation("{Name} is running.", Name);
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            using IServiceScope scope = serviceScopeFactory.CreateScope();
+
+            IScopedProcessingService scopedProcessingService =
+                scope.ServiceProvider.GetRequiredService<IScopedProcessingService>();
+            
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            await scopedProcessingService.DoWorkAsync(stoppingToken);
+
+            await DoWork(mediator, stoppingToken);
+            await Task.Delay(10_000, stoppingToken);
+        }
     }
 
-    private async Task DoWork(CancellationToken cancellationToken)
+    private async Task DoWork(IMediator mediator, CancellationToken cancellationToken)
     {
         // Get all videos that need cocktail extraction
         var getVideosByStatusResponse =
@@ -56,17 +70,5 @@ internal sealed class CocktailExtractionWorker(IMediator mediator) : IHostedServ
                     new UpdateVideoRequest(v.Id, null, Status.Processed), cancellationToken);
             }
         }
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        Console.WriteLine("Cocktail extraction stopping");
-        _timer?.Change(Timeout.Infinite, 0);
-        return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        _timer?.Dispose();
     }
 }

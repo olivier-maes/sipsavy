@@ -8,25 +8,39 @@ using SipSavy.Worker.Features.Youtube.GetVideosByChannelId;
 
 namespace SipSavy.Worker.Workers;
 
-internal sealed class TranscriptionWorker(IMediator mediator) : IHostedService, IDisposable
+internal sealed class TranscriptionWorker(
+    ILogger<TranscriptionWorker> logger,
+    IServiceScopeFactory serviceScopeFactory) : BackgroundService
 {
-    private Timer? _timer;
+    private const string Name = nameof(TranscriptionWorker);
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine($"Transcription worker running at: {DateTimeOffset.Now}");
-        _timer = new Timer(async void (_) => await DoWork(cancellationToken), null, TimeSpan.Zero,
-            TimeSpan.FromHours(1));
-        return Task.CompletedTask;
+        logger.LogInformation("{Name} is running.", Name);
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            using IServiceScope scope = serviceScopeFactory.CreateScope();
+
+            IScopedProcessingService scopedProcessingService =
+                scope.ServiceProvider.GetRequiredService<IScopedProcessingService>();
+
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            await scopedProcessingService.DoWorkAsync(stoppingToken);
+
+            await DoWork(mediator, stoppingToken);
+            await Task.Delay(10_000, stoppingToken);
+        }
     }
 
-    private async Task DoWork(CancellationToken cancellationToken)
+    private async Task DoWork(IMediator mediator, CancellationToken cancellationToken)
     {
         var youtubeChannelId = Environment.GetEnvironmentVariable("YOUTUBE_CHANNEL_ID") ??
                                throw new Exception("YOUTUBE_CHANNEL_ID environment variable not set");
 
         // Get all videos from a specific YouTube channel
-        var videosByChannelIdResponse = await mediator.Send(new GetVideosByChannelIdRequest(youtubeChannelId), cancellationToken);
+        var videosByChannelIdResponse =
+            await mediator.Send(new GetVideosByChannelIdRequest(youtubeChannelId), cancellationToken);
 
         // Add the new videos to the database
         await mediator.Send(new AddNewVideosRequest
@@ -56,17 +70,5 @@ internal sealed class TranscriptionWorker(IMediator mediator) : IHostedService, 
                 Status.TranscriptionFetched
             ), cancellationToken);
         }
-    }
-
-    public Task StopAsync(CancellationToken stoppingToken)
-    {
-        Console.WriteLine("Transcription worker stopping");
-        _timer?.Change(Timeout.Infinite, 0);
-        return Task.CompletedTask;
-    }
-
-    public void Dispose()
-    {
-        _timer?.Dispose();
     }
 }
