@@ -8,7 +8,7 @@ using SipSavy.Worker.Features.Youtube.GetVideosByChannelId;
 
 namespace SipSavy.Worker.Workers;
 
-internal sealed class TranscriptionWorker(IMediator mediator) : IHostedService, IDisposable
+internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFactory) : IHostedService, IDisposable
 {
     private Timer? _timer;
 
@@ -22,6 +22,9 @@ internal sealed class TranscriptionWorker(IMediator mediator) : IHostedService, 
 
     private async Task DoWork(CancellationToken cancellationToken)
     {
+        using var scope = serviceScopeFactory.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        
         var youtubeChannelId = Environment.GetEnvironmentVariable("YOUTUBE_CHANNEL_ID") ??
                                throw new Exception("YOUTUBE_CHANNEL_ID environment variable not set");
 

@@ -23,7 +23,7 @@ builder.Services.AddScoped<ICocktailRepository, CocktailRepository>();
 builder.Services.AddScoped<YoutubeClient>();
 
 // Mediator
-builder.Services.AddMediator();
+builder.Services.AddMediator(options => { options.ServiceLifetime = ServiceLifetime.Scoped; });
 
 // Worker
 builder.Services.AddHostedService<TranscriptionWorker>();

@@ -7,7 +7,7 @@ using SipSavy.Worker.Features.Video.UpdateVideo;
 
 namespace SipSavy.Worker.Workers;
 
-internal sealed class CocktailExtractionWorker(IMediator mediator) : IHostedService, IDisposable
+internal sealed class CocktailExtractionWorker(IServiceScopeFactory serviceScopeFactory) : IHostedService, IDisposable
 {
     private Timer? _timer;
 
@@ -21,6 +21,9 @@ internal sealed class CocktailExtractionWorker(IMediator mediator) : IHostedServ
 
     private async Task DoWork(CancellationToken cancellationToken)
     {
+        using var scope = serviceScopeFactory.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        
         // Get all videos that need cocktail extraction
         var getVideosByStatusResponse =
             await mediator.Send(new GetVideosByStatusRequest(Status.TranscriptionFetched),
