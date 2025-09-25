@@ -1,6 +1,7 @@
 ﻿@page "/"
+@using Mediator
 @using SipSavy.Web.Features.Cocktail.GetCocktailsOverview
-@inject GetCocktailsOverviewHandler GetCocktailsOverviewHandler
+@inject IMediator Mediator
 
 <PageTitle>Home</PageTitle>
 
@@ -30,7 +31,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var res = await GetCocktailsOverviewHandler.Handle(new GetCocktailsOverviewRequest(), CancellationToken.None);
+        var res = await Mediator.Send(new GetCocktailsOverviewRequest());
         Cocktails = res.Cocktails;
     }
 }

@@ -1,14 +1,14 @@
+using Mediator;
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Core;
 using SipSavy.Data;
 using SipSavy.Data.Repository;
 
 namespace SipSavy.Worker.Features.Video.AddNewVideos;
 
 internal sealed class AddNewVideosHandler(IQueryFacade queryFacade, IVideoRepository videoRepository)
-    : IHandler<AddNewVideosRequest, AddNewVideosResponse>
+    : IRequestHandler<AddNewVideosRequest, AddNewVideosResponse>
 {
-    public async Task<AddNewVideosResponse> Handle(AddNewVideosRequest request, CancellationToken cancellationToken)
+    public async ValueTask<AddNewVideosResponse> Handle(AddNewVideosRequest request, CancellationToken cancellationToken)
     {
         var addedVideos = new List<Data.Domain.Video>();
 

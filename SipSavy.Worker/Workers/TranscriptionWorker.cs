@@ -1,3 +1,4 @@
+using Mediator;
 using SipSavy.Data.Domain;
 using SipSavy.Worker.Features.Video.AddNewVideos;
 using SipSavy.Worker.Features.Video.GetVideosByStatus;
@@ -22,21 +23,16 @@ internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFacto
     private async Task DoWork(CancellationToken cancellationToken)
     {
         using var scope = serviceScopeFactory.CreateScope();
-        var getVideosByChannelIdHandler = scope.ServiceProvider.GetRequiredService<GetVideosByChannelIdHandler>();
-        var extractTranscriptionHandler = scope.ServiceProvider.GetRequiredService<ExtractTranscriptionHandler>();
-        var addNewVideosHandler = scope.ServiceProvider.GetRequiredService<AddNewVideosHandler>();
-        var getVideosByStatusHandler = scope.ServiceProvider.GetRequiredService<GetVideosByStatusHandler>();
-        var updateVideoHandler = scope.ServiceProvider.GetRequiredService<UpdateVideoHandler>();
-
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        
         var youtubeChannelId = Environment.GetEnvironmentVariable("YOUTUBE_CHANNEL_ID") ??
                                throw new Exception("YOUTUBE_CHANNEL_ID environment variable not set");
 
         // Get all videos from a specific YouTube channel
-        var videosByChannelIdResponse = await getVideosByChannelIdHandler
-            .Handle(new GetVideosByChannelIdRequest(youtubeChannelId), cancellationToken);
+        var videosByChannelIdResponse = await mediator.Send(new GetVideosByChannelIdRequest(youtubeChannelId), cancellationToken);
 
         // Add the new videos to the database
-        await addNewVideosHandler.Handle(new AddNewVideosRequest
+        await mediator.Send(new AddNewVideosRequest
         {
             Videos = videosByChannelIdResponse.Videos.Select(x => new AddNewVideosRequest.VideoDto
             {
@@ -47,17 +43,17 @@ internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFacto
 
         // Get videos that need transcription
         var getVideosByStatusResponse =
-            await getVideosByStatusHandler.Handle(new GetVideosByStatusRequest(Status.New), cancellationToken);
+            await mediator.Send(new GetVideosByStatusRequest(Status.New), cancellationToken);
         foreach (var v in getVideosByStatusResponse.Videos)
         {
             // Extract transcription
-            var extractTranscriptionResponse = await extractTranscriptionHandler.Handle(
+            var extractTranscriptionResponse = await mediator.Send(
                 new ExtractTranscriptionRequest(v.YoutubeId),
                 cancellationToken
             );
 
             // Update video
-            await updateVideoHandler.Handle(new UpdateVideoRequest(
+            await mediator.Send(new UpdateVideoRequest(
                 v.Id,
                 extractTranscriptionResponse.Transcription,
                 Status.TranscriptionFetched

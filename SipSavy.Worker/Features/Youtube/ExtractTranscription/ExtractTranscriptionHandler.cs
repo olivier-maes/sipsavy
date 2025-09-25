@@ -1,12 +1,12 @@
-using SipSavy.Core;
+using Mediator;
 using YoutubeExplode;
 
 namespace SipSavy.Worker.Features.Youtube.ExtractTranscription;
 
 public sealed class ExtractTranscriptionHandler(YoutubeClient youtubeClient)
-    : IHandler<ExtractTranscriptionRequest, ExtractTranscriptionResponse>
+    : IRequestHandler<ExtractTranscriptionRequest, ExtractTranscriptionResponse>
 {
-    public async Task<ExtractTranscriptionResponse> Handle(ExtractTranscriptionRequest request,
+    public async ValueTask<ExtractTranscriptionResponse> Handle(ExtractTranscriptionRequest request,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.YoutubeVideoId))

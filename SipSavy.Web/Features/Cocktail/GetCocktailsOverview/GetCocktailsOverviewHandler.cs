@@ -1,13 +1,13 @@
+using Mediator;
 using Microsoft.EntityFrameworkCore;
-using SipSavy.Core;
 using SipSavy.Data;
 
 namespace SipSavy.Web.Features.Cocktail.GetCocktailsOverview;
 
 internal sealed class GetCocktailsOverviewHandler(IQueryFacade queryFacade)
-    : IHandler<GetCocktailsOverviewRequest, GetCocktailsOverviewResponse>
+    : IRequestHandler<GetCocktailsOverviewRequest, GetCocktailsOverviewResponse>
 {
-    public async Task<GetCocktailsOverviewResponse> Handle(GetCocktailsOverviewRequest request,
+    public async ValueTask<GetCocktailsOverviewResponse> Handle(GetCocktailsOverviewRequest request,
         CancellationToken cancellationToken)
     {
         return new GetCocktailsOverviewResponse

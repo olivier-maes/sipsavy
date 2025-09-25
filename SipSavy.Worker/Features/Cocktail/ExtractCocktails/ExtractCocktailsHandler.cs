@@ -1,16 +1,16 @@
 using System.Text;
 using System.Text.Json;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 using OllamaSharp;
 using OllamaSharp.Models;
-using SipSavy.Core;
 using SipSavy.Data;
-using SipSavy.Data.Domain;
+using Unit = SipSavy.Data.Domain.Unit;
 
 namespace SipSavy.Worker.Features.Cocktail.ExtractCocktails;
 
 internal sealed class ExtractCocktailsHandler
-    : IHandler<ExtractCocktailsRequest, ExtractCocktailsResponse>
+    : IRequestHandler<ExtractCocktailsRequest, ExtractCocktailsResponse>
 {
     private readonly IQueryFacade _queryFacade;
     private readonly IOllamaApiClient _ollamaApiClient;
@@ -25,7 +25,7 @@ internal sealed class ExtractCocktailsHandler
         _ollamaApiClient.SelectedModel = _model;
     }
 
-    public async Task<ExtractCocktailsResponse> Handle(ExtractCocktailsRequest request,
+    public async ValueTask<ExtractCocktailsResponse> Handle(ExtractCocktailsRequest request,
         CancellationToken cancellationToken)
     {
         var fullResponse = new StringBuilder();

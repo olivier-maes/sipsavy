@@ -9,6 +9,11 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.7.2" />
+        <PackageReference Include="Mediator.Abstractions" Version="3.0.1" />
+        <PackageReference Include="Mediator.SourceGenerator" Version="3.0.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
@@ -20,7 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SipSavy.Core\SipSavy.Core.csproj" />
         <ProjectReference Include="..\SipSavy.Data\SipSavy.Data.csproj" />
         <ProjectReference Include="..\SipSavy.ServiceDefaults\SipSavy.ServiceDefaults.csproj"/>
     </ItemGroup>

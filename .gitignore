@@ -7,3 +7,4 @@ riderModule.iml
 *.sln.DotSettings.user
 node_modules
 */node_modules
+global.json
