@@ -1,4 +1,3 @@
-using Mediator;
 using SipSavy.Data;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
@@ -17,7 +16,7 @@ builder.AddNpgsqlDbContext<AppDbContext>("sipsavy");
 builder.Services.AddScoped<IQueryFacade, QueryFacade>();
 
 // Mediator
-builder.Services.AddMediator(options => { options.ServiceLifetime = ServiceLifetime.Scoped; });
+builder.Services.AddMediator();
 
 var app = builder.Build();
 
