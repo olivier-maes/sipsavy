@@ -1,4 +1,4 @@
-namespace SipSavy.Web.Tests;
+namespace SipSavy.Web.Tests.TestData;
 
 internal static class TestVideo
 {
