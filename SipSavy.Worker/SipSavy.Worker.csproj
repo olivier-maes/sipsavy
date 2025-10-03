@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.7.2" />
+        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.8.0" />
         <PackageReference Include="Mediator.Abstractions" Version="3.0.1" />
         <PackageReference Include="Mediator.SourceGenerator" Version="3.0.1">
           <PrivateAssets>all</PrivateAssets>

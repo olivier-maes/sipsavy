@@ -11,8 +11,8 @@ var database = postgres.AddDatabase("sipsavy");
 // Ollama
 var ollama = builder.AddOllama("ollama")
     .WithDataVolume("ollama-data")
-    .WithLifetime(ContainerLifetime.Persistent)
-    .WithGPUSupport();
+    .WithLifetime(ContainerLifetime.Persistent);
+    //.WithGPUSupport();
 
 var ollamaModel = ollama.AddModel("llama3", "llama3.1");
 
