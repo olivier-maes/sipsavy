@@ -1,0 +1,20 @@
+@page "/cocktail/{id:int}"
+@using SipSavy.Web.Features.Cocktail.GetCocktailDetail
+@inject IMediator Mediator
+
+<div class="p-8">
+    <h1 class="text-xl">@Cocktail.Name</h1>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private GetCocktailDetailResponse.CocktailDto Cocktail { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await Mediator.Send(new GetCocktailDetailRequest(Id));
+        Cocktail = res.Cocktail;
+    }
+
+}

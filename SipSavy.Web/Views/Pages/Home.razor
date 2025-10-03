@@ -1,9 +1,8 @@
 ﻿@page "/"
-@using Mediator
 @using SipSavy.Web.Features.Cocktail.GetCocktailsOverview
 @inject IMediator Mediator
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Cocktails</PageTitle>
 
 <div class="p-8">
     <h1 class="text-xl">Cocktails</h1>
@@ -18,7 +17,7 @@
                 </div>
                 <div>
                     <div>@cocktail.Name</div>
-                    <div class="text-xs uppercase font-semibold opacity-60">Remaining Reason</div>
+                    <div class="text-xs uppercase font-semibold opacity-60">Add something here</div>
                 </div>
             </li>
         }
