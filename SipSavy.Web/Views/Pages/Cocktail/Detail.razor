@@ -4,6 +4,16 @@
 
 <div class="p-8">
     <h1 class="text-xl">@Cocktail.Name</h1>
+
+    @foreach (var ingredient in Cocktail.Ingredients)
+    {
+        <li class="list-row flex items-center">
+            <div>
+                <div>@ingredient.Name</div>
+                <div class="text-xs uppercase font-semibold opacity-60">@ingredient.Quantity @ingredient.Unit</div>
+            </div>
+        </li>
+    }
 </div>
 
 @code {

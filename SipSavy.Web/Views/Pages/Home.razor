@@ -11,15 +11,17 @@
 
         @foreach (var cocktail in Cocktails)
         {
-            <li class="list-row flex items-center">
-                <div>
-                    <i class="fa-solid fa-martini-glass fa-xl"></i>
-                </div>
-                <div>
-                    <div>@cocktail.Name</div>
-                    <div class="text-xs uppercase font-semibold opacity-60">Add something here</div>
-                </div>
-            </li>
+            <a href="/cocktail/@cocktail.Id">
+                <li class="list-row flex items-center">
+                    <div>
+                        <i class="fa-solid fa-martini-glass fa-xl"></i>
+                    </div>
+                    <div>
+                        <div>@cocktail.Name</div>
+                        <div class="text-xs uppercase font-semibold opacity-60">Add something here</div>
+                    </div>
+                </li>
+            </a>
         }
     </ul>
 </div>
