@@ -12,11 +12,11 @@ public class GetVideosByStatusTest(PostgresFixture fixture) : IClassFixture<Post
     {
         // Arrange
         var queryFacade = new QueryFacade(fixture.DbContext);
-        
+
         // Act
         var sut = new GetVideosByStatusHandler(queryFacade);
         var response = await sut.Handle(new GetVideosByStatusRequest(Status.New), CancellationToken.None);
-        
+
         // Assert
         Assert.IsType<GetVideosByStatusResponse>(response);
         Assert.Single(response.Videos);

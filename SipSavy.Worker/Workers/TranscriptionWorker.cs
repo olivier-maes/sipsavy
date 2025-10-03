@@ -24,7 +24,7 @@ internal sealed class TranscriptionWorker(IServiceScopeFactory serviceScopeFacto
     {
         using var scope = serviceScopeFactory.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        
+
         var youtubeChannelId = Environment.GetEnvironmentVariable("YOUTUBE_CHANNEL_ID") ??
                                throw new Exception("YOUTUBE_CHANNEL_ID environment variable not set");
 

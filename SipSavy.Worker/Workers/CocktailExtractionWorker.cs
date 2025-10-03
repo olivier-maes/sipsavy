@@ -23,7 +23,7 @@ internal sealed class CocktailExtractionWorker(IServiceScopeFactory serviceScope
     {
         using var scope = serviceScopeFactory.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        
+
         // Get all videos that need cocktail extraction
         var getVideosByStatusResponse =
             await mediator.Send(new GetVideosByStatusRequest(Status.TranscriptionFetched),
