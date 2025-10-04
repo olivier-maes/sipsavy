@@ -11,7 +11,7 @@ public sealed class PostgresFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         await PostgresContainer.StartAsync();
-        
+
         DbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(PostgresContainer.GetConnectionString())
             .Options);

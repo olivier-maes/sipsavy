@@ -22,13 +22,13 @@ public sealed class PostgresFixture : IAsyncLifetime
         await DbContext.Database.MigrateAsync();
         await SeedDatabase(DbContext);
     }
-    
+
     public async Task ClearAndReseedAsync()
     {
         await ClearAllTables();
         await SeedDatabase(DbContext);
     }
-    
+
     private async Task ClearAllTables()
     {
         DbContext.ChangeTracker.Clear();
