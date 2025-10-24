@@ -11,10 +11,10 @@ var database = postgres.AddDatabase("sipsavy");
 // Ollama
 var ollama = builder.AddOllama("ollama")
     .WithDataVolume("ollama-data")
-    .WithLifetime(ContainerLifetime.Persistent);
-//.WithGPUSupport();
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithGPUSupport();
 
-var ollamaModel = ollama.AddModel("llama3", "llama3.1");
+var llama4 = ollama.AddModel("llama4");
 
 // SipSavy Migration application
 var migrationWorker = builder.AddProject<Projects.SipSavy_MigrationWorker>("sipsavy-migration-worker")
@@ -25,13 +25,12 @@ var migrationWorker = builder.AddProject<Projects.SipSavy_MigrationWorker>("sips
 var worker = builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
     .WithReference(database)
     .WithReference(ollama)
-    .WithReference(ollamaModel)
+    .WithReference(llama4)
     .WaitFor(postgres)
     .WaitFor(ollama)
-    .WaitFor(ollamaModel)
+    .WaitFor(llama4)
     .WaitForCompletion(migrationWorker)
-    .WithEnvironment("YOUTUBE_CHANNEL_ID", "UCioZY1p0bZ4Xt-yodw8_cBQ")
-    .WithEnvironment("AI_CHAT_MODEL", "llama3.1");
+    .WithEnvironment("YOUTUBE_CHANNEL_ID", "UCioZY1p0bZ4Xt-yodw8_cBQ");
 
 // SipSavy Web application
 builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
