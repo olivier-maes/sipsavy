@@ -1,27 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-SipSavy.Worker-2692dfec-40a2-4a2e-b532-ce28c6b2fef5</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.8.0" />
+        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="9.9.0" />
         <PackageReference Include="Mediator.Abstractions" Version="3.0.1" />
         <PackageReference Include="Mediator.SourceGenerator" Version="3.0.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.2.2" />
-        <PackageReference Include="YoutubeExplode" Version="6.5.5" />
+        <PackageReference Include="YoutubeExplode" Version="6.5.6" />
     </ItemGroup>
 
     <ItemGroup>
