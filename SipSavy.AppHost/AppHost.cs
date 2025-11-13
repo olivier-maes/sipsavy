@@ -30,7 +30,8 @@ var worker = builder.AddProject<Projects.SipSavy_Worker>("sipsavy-worker")
     .WaitFor(ollama)
     .WaitFor(llmModel)
     .WaitForCompletion(migrationWorker)
-    .WithEnvironment("YOUTUBE_CHANNEL_ID", "UCioZY1p0bZ4Xt-yodw8_cBQ");
+    .WithEnvironment("YOUTUBE_CHANNEL_ID", "UCioZY1p0bZ4Xt-yodw8_cBQ")
+    .WithEnvironment("AI_CHAT_MODEL", "llama3.2");
 
 // SipSavy Web application
 builder.AddProject<Projects.SipSavy_Web>("sipsavy-web")
