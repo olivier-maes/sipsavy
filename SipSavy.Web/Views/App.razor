@@ -5,19 +5,19 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <base href="/"/>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="@Assets["SipSavy.Web.styles.css"]"/>
-    <link rel="stylesheet" href="@Assets["tailwind.css"]"/>
     <ImportMap/>
     <link rel="icon" type="image/png" href="favicon.png"/>
-    <HeadOutlet/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet" />
+    <HeadOutlet @rendermode="InteractiveServer" />
     <title>sipsavy</title>
 </head>
 
-<body class="min-h-screen min-w-[860px] flex flex-col bg-page">
+<body>
 <Routes/>
 <script src="https://kit.fontawesome.com/7c2f7d55ce.js" crossorigin="anonymous"></script>
 <script src="_framework/blazor.web.js"></script>
+<script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
 </body>
 
 </html>
