@@ -4,27 +4,46 @@
 
 <PageTitle>Cocktails</PageTitle>
 
-<div class="p-8">
-    <h1 class="text-xl">Cocktails</h1>
 
-    <ul class="list bg-base-100 rounded-box shadow-md mt-8">
+<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Latest</MudText>
+<MudText Align="Align.Center">Cocktails from the latest videos.</MudText>
+<MudGrid Class="mt-8">
+    @foreach (var cocktail in Cocktails)
+    {
+        <MudItem xs="12" sm="6" md="4">
 
-        @foreach (var cocktail in Cocktails)
-        {
-            <a href="/cocktail/@cocktail.Id">
-                <li class="list-row flex items-center">
-                    <div>
-                        <i class="fa-solid fa-martini-glass fa-xl"></i>
+            <MudCard Elevation="25" Class="rounded-lg pb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5" Align="Align.Center">@cocktail.Name</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <div class="d-flex justify-center">
+                        <MudText Typo="Typo.h3">$5</MudText>
+                        <MudText Typo="Typo.h5" Class="ml-1 mt-5" Color="Color.Secondary">/Monthly</MudText>
                     </div>
-                    <div>
-                        <div>@cocktail.Name</div>
-                        <div class="text-xs uppercase font-semibold opacity-60">Add something here</div>
-                    </div>
-                </li>
-            </a>
-        }
-    </ul>
-</div>
+                    <MudList T="string" Class="mx-auto mt-4" Style="width:300px;">
+                        <MudListItem Icon="@Icons.Material.Filled.LiveHelp">
+                            Unlimited something
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.LiveHelp">
+                            10 something
+                        </MudListItem>
+                        <MudListItem Icon="@Icons.Material.Filled.LiveHelp">
+                            No something
+                        </MudListItem>
+                    </MudList>
+                </MudCardContent>
+                <MudCardActions Class="d-flex justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Style="width:50%;">
+                        Recipe
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
 
 @code
 {

@@ -1,3 +1,4 @@
+using MudBlazor.Services;
 using SipSavy.Data;
 using SipSavy.Web.Views;
 using SipSavy.ServiceDefaults;
@@ -5,7 +6,9 @@ using SipSavy.ServiceDefaults;
 var builder = WebApplication.CreateBuilder(args);
 
 // Blazor
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+
+builder.Services.AddMudServices();
 
 // Aspire service defaults
 builder.AddServiceDefaults();
@@ -33,7 +36,8 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 // Aspire default endpoints for health checks, etc. (only in development)
 app.MapDefaultEndpoints();
